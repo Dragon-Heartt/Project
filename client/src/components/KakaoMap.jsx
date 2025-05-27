@@ -1,6 +1,8 @@
 
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import CurrentPlace from "./CurrentPlace";
+import "./KakaoMap.css";
 
 function KakaoMap() {
   useEffect(() => {
@@ -39,8 +41,11 @@ function KakaoMap() {
   }, []);
 
   return (
-    <div style={{ flex: 1 }}>
-      <div id="map" style={{ width: "100%", height: "100%" }}></div>
+    <div className="map-container">
+      <div id="map" className="map" />
+      <div className="current-place-wrapper">
+        <CurrentPlace onClick={() => console.log("현재 위치 클릭")} />
+      </div>
     </div>
   );
 }
