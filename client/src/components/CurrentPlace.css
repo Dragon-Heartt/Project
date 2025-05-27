@@ -1,0 +1,34 @@
+.CurrentPlace {
+  /* 기존 스타일 그대로 두시고… */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+
+  width: 48px;
+  height: 48px;
+
+  padding: 0;
+  border: none;
+  background: #fff;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  z-index: 1000;
+
+  /* ↓↓↓ 여기서 그림자 설정 ↓↓↓ */
+  box-shadow:
+    /* 바깥으로 퍼지는 흐린 그림자 */
+    0 10px 20px rgba(0, 0, 0, 0.12),
+    /* 약간 더 진하고 근접한 그림자 */
+    0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.CurrentPlace .element {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+}
