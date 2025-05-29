@@ -1,0 +1,184 @@
+/* Highlighted font for welcome headline */
+.highlight-font {
+    font-family: 'Pretendard', 'Arial', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #1a237e;
+    /* Add more styles as needed */
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Pretendard', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    min-height: 100vh;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.sign-button {
+    background: #3d49cf;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 3;
+    display: inline-block;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    color: #333;
+    background: rgba(255,255,255,0.0);
+    border-radius: 16px;
+    padding: 1.5rem 2rem 1.5rem 2rem;
+    box-shadow: none;
+    position: relative;
+    z-index: 3;
+    text-align: center;
+}
+
+.welcome-text:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.map-button {
+    background: #3d49cf;
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 3;
+    display: inline-block;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.sign-button:hover {
+    background-color: #545ed4;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.map-button:hover {
+    background-color: #545ed4;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.floating-elements {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-element {
+    position: absolute;
+    opacity: 0.8;
+    transition: all 0.5s ease;
+}
+
+.element1 { top: 8%; left: 5%; }
+.element2 { top: 19%; right: 8%; }
+.element3 { bottom: 15%; left: 10%; }
+.element4 { top: 20%; left: 25%; }
+.element5 { bottom: 31%; right: 23%; }
+.element6 { bottom: 7%; right: 5%; }
+.element7 { top: 10%; right: 35%; }
+.element8 { bottom: 5%; right: 50%; }
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element:nth-child(odd) {
+    animation-delay: 0.5s;
+}
+
+.floating-element:nth-child(3n) {
+    animation-delay: 1s;
+}
+
+.floating-element:nth-child(3n+1) {
+    animation-delay: 1.5s;
+}
+
+.map-button:active + .floating-elements .floating-element {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+}
+
+.top-right-buttons {
+    position: absolute;
+    top: 32px;
+    right: 48px;
+    display: flex;
+    gap: 16px;
+    z-index: 10;
+}
+
+.mouse-glow {
+    position: relative;
+    background: none;
+    transition: color 0.2s;
+}
+.mouse-glow:hover {
+    color: #fff;
+}
+.mouse-glow::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    opacity: 0.7;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+    background: radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), rgba(61,73,207,0.35) 0%, rgba(255,255,255,0.0) 80%);
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: lighten;
+    will-change: background;
+}
+.mouse-glow:not(:hover)::after {
+    opacity: 0;
+} 
