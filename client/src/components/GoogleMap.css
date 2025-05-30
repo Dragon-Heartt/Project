@@ -1,0 +1,76 @@
+/* 맵 + 오버레이 감싸는 컨테이너 */
+.map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* 맵 */
+.map {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.current-place-wrapper {
+	position: fixed;
+	bottom: 32px;
+	right: 32px;
+	width: 56px;
+	height: 56px;
+	border: none;
+	background: #fff;
+	border-radius: 50%;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 1001;
+	transition: transform 0.18s, background 0.18s;
+}
+.current-place-wrapper:hover {
+	transform: scale(1.08);
+	background: #eaf3fd;
+}
+.current-place-wrapper img.element {
+	width: 36px;
+	height: 36px;
+}
+.current-place-wrapper:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.pulse-marker {
+	position: absolute;
+	width: 28px;
+	height: 28px;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+	z-index: 1100;
+	border-radius: 50%;
+	box-shadow: 0 0 16px 6px rgba(207, 61, 61, 0.25), 0 0 0 8px rgba(207, 61, 61, 0.1);
+
+	animation: pulse-marker-anim 1.2s infinite cubic-bezier(.4,2,.6,1);
+}
+@keyframes pulse-marker-anim {
+	0% {
+		transform: scale(0.85);
+		opacity: 0.7;
+	}
+	60% {
+		transform: scale(1.15);
+		opacity: 0.25;
+	}
+	100% {
+		transform: scale(0.85);
+		opacity: 0.7;
+	}
+}
+
