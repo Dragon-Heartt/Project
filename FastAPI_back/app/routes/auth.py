@@ -1,10 +1,18 @@
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt
+from dotenv import load_dotenv
+from fastapi.responses import JSONResponse
+from fastapi import Request
+
 
 from app import models, schemas, database
+
+load_dotenv()
 
 router = APIRouter(
     prefix="/auth",
@@ -13,9 +21,9 @@ router = APIRouter(
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = "your_jwt_secret_key"  # 실제로는 .env에서 불러오는 게 안전합니다.
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60  # 토큰 만료 시간(분)
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 def hash_password(password: str):
     return pwd_context.hash(password)
@@ -56,4 +64,45 @@ def login(request: schemas.UserLogin, db: Session = Depends(database.get_db)):
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    response = JSONResponse(content={"message": "로그인 성공"})
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        secure=False,  # HTTPS면 True
+        samesite="lax"
+    )
+    return response
+
+# ...existing code...
+
+def get_current_user(request: Request, db: Session = Depends(database.get_db)):
+    token = request.cookies.get("access_token")
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="인증 정보가 유효하지 않습니다.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    if token is None:
+        raise credentials_exception
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except Exception:
+        raise credentials_exception
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if user is None:
+        raise credentials_exception
+    return user
+
+@router.get("/me")
+def read_users_me(current_user: models.User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "created_at": current_user.created_at
+    }
