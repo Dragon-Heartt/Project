@@ -40,7 +40,7 @@ function SidebarUI({ isOpen, onToggle }) {
 								</button>
 								<div className={`category-slide${showCategory ? ' open' : ''}`}> 
 									<div className="div-4">
-										<div className="div-5">
+										<div className="div-10">
 											<div className="text-wrapper-2">공간 유형</div>
 											<div className="div-6">
 												<button

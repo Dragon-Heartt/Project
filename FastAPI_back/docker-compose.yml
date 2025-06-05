@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0                  # MySQL 공식 이미지 (버전 8.0)
+    container_name: dh-mysql          # 컨테이너 이름은 마음대로 지정 가능
+    restart: unless-stopped
+    ports:
+      - "3306:3306"                   # 호스트 3306 포트 ↔ 컨테이너 3306 포트 매핑
+    environment:
+      MYSQL_ROOT_PASSWORD: 889900   # root 비밀번호 (원하는 값으로 변경)
+      MYSQL_DATABASE: SmokeMapDB           # 초기 생성할 데이터베이스 이름
+      MYSQL_USER: dhuser                      # 추가로 생성할 일반 사용자
+      MYSQL_PASSWORD: dhpasswd                # 추가 사용자 비밀번호
+    volumes:
+      - db_data:/var/lib/mysql         # 데이터를 로컬 볼륨에 저장 (영속성 보장)
+
+volumes:
+  db_data: {}                          # MySQL 데이터가 저장될 볼륨 정의
