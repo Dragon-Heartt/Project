@@ -64,8 +64,8 @@ const GoogleMap = () => {
 			}
 			try {
 				console.log('지도 초기화 시도...');
-				mapInstance.current = new window.google.maps.Map(mapRef.current, {
-					center: DEFAULT_CENTER,
+			mapInstance.current = new window.google.maps.Map(mapRef.current, {
+				center: DEFAULT_CENTER,
 					zoom: 18,
 					mapTypeControl: true,
 					streetViewControl: true,
@@ -75,20 +75,20 @@ const GoogleMap = () => {
 
 				console.log('지도 초기화 성공');
 
-				// 기본 마커 (AdvancedMarkerElement 사용)
-				if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
-					markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
-						map: mapInstance.current,
-						position: DEFAULT_CENTER,
-					});
-				} else {
-					// fallback: 기존 Marker (구버전 브라우저 호환)
-					markerRef.current = new window.google.maps.Marker({
-						position: DEFAULT_CENTER,
-						map: mapInstance.current,
-					});
-				}
-				setMapLoaded(true);
+			// 기본 마커 (AdvancedMarkerElement 사용)
+			if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
+				markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
+					map: mapInstance.current,
+					position: DEFAULT_CENTER,
+				});
+			} else {
+				// fallback: 기존 Marker (구버전 브라우저 호환)
+				markerRef.current = new window.google.maps.Marker({
+					position: DEFAULT_CENTER,
+					map: mapInstance.current,
+				});
+			}
+			setMapLoaded(true);
 			} catch (err) {
 				console.error('지도 초기화 실패:', err);
 				setError('지도를 초기화하는데 실패했습니다.');
