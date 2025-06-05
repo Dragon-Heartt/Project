@@ -5,6 +5,7 @@ import WelcomePage from "./components/WelcomePage";
 import GoogleMap from "./components/GoogleMap";
 import SidebarUI from "./components/SidebarUI";
 import Login from "./components/Login";
+import SignUp from "./components/SignUp";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
@@ -22,6 +23,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<Login />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
