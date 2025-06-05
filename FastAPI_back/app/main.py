@@ -1,19 +1,43 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth  # 필요 시 다른 라우트도 import
+from app.routes import auth  # 상대 import로 변경
 
-app = FastAPI()
+app = FastAPI(
+    title="Dragon Heart API (Local)",
+    version="1.0.0",
+    description="로컬 개발 환경용 API"
+)
 
-# CORS 설정 (쿠키 사용 시 꼭 필요)
+# 로컬 개발 환경용 CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # 프론트엔드 주소
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# 서버 상태 확인 엔드포인트
+@app.get("/")
+async def root():
+    return {
+        "message": "🐉 Dragon Heart API (Local) is running!",
+        "status": "healthy",
+        "environment": "local"
+    }
+
+# Health check 엔드포인트
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "api": "running",
+        "environment": "local"
+    }
+
 # 라우터 등록
 app.include_router(auth.router)
-# 다른 라우터도 있으면 여기에 추가
-# app.include_router(smokingZone.router) 등등
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
