@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
+from jose import jwt
 
 from app import models, schemas, database
 
@@ -11,22 +11,18 @@ router = APIRouter(
     tags=["auth"]
 )
 
-# 비밀번호 해싱 설정
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# JWT 설정
-SECRET_KEY = "your_jwt_secret_key"  # .env에서 가져오게 바꿀 수도 있음
+SECRET_KEY = "your_jwt_secret_key"  # 실제로는 .env에서 불러오는 게 안전합니다.
 ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # 토큰 만료 시간(분)
 
-# 비밀번호 해싱 함수
 def hash_password(password: str):
     return pwd_context.hash(password)
 
-# 비밀번호 검증 함수
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-# 토큰 생성 함수
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     if expires_delta:
@@ -37,7 +33,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# 회원가입
 @router.post("/signup", status_code=201)
 def signup(request: schemas.UserCreate, db: Session = Depends(database.get_db)):
     existing_user = db.query(models.User).filter(models.User.email == request.email).first()
@@ -51,7 +46,6 @@ def signup(request: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db.refresh(new_user)
     return {"message": "회원가입 성공"}
 
-# 로그인
 @router.post("/login")
 def login(request: schemas.UserLogin, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.email == request.email).first()

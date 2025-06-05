@@ -12,12 +12,12 @@ body, html {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	position: relative;
+    position: relative;
 	min-height: 100vh;
 }
 
 .home-btn {
-	position: absolute;
+    position: absolute;
 	top: 32px;
 	left: 32px;
 	background: #fff;
@@ -29,13 +29,13 @@ body, html {
 	cursor: pointer;
 	transition: transform 0.2s;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+    align-items: center;
+    justify-content: center;
 	z-index: 10;
 }
 .home-btn:hover {
 	transform: scale(1.12);
-}
+    }
 
 .home-icon {
 	width: 32px;
@@ -49,11 +49,11 @@ body, html {
 	padding: 48px 64px 32px 64px;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+    align-items: center;
 	min-width: 400px;
 	min-height: 420px;
-	position: relative;
-}
+    position: relative;
+    }
 
 .login-title {
 	font-size: 2.5rem;
@@ -67,18 +67,18 @@ body, html {
 	height: 80px;
 	margin: 12px 0 24px 0;
 	transition: transform 0.7s cubic-bezier(.4,2,.6,1);
-}
+    }
 .mainicon:hover {
 	transform: rotate(360deg) scale(1.08);
-}
+    }
 
 .login-form {
 	width: 100%;
 	display: flex;
-	flex-direction: column;
+    flex-direction: column;
 	gap: 10px;
 	margin-bottom: 18px;
-}
+    }
 .login-form label {
 	font-size: 1.1rem;
 	font-weight: 500;
@@ -93,7 +93,7 @@ body, html {
 	outline: none;
 	transition: border-color 0.2s;
 	margin-bottom: 6px;
-}
+    }
 .login-form input.input-focus {
 	border-color: #3d49cf;
 	box-shadow: 0 0 0 2px #e3ecf7;
@@ -116,7 +116,7 @@ body, html {
 .login-btn:active {
 	background: #5a6cf7;
 	transform: scale(1.07);
-}
+    }
 .login-btn:hover {
 	background: #545ed4;
 	transform: scale(1.04);
@@ -132,8 +132,8 @@ body, html {
 	font-weight: 600;
 	cursor: pointer;
 	transition: color 0.18s;
-}
+    }
 .link-text:hover {
 	color: #1a237e;
 	text-decoration: underline;
-}
+    }

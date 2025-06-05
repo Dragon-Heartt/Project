@@ -54,7 +54,7 @@ const Login = () => {
 				</form>
 				<div className="signup-link">
 					아직 회원이 아닌가요?{' '}
-					<span className="link-text" onClick={() => navigate('/signup')}> 회원가입하기 </span>
+					<span className="link-text" onClick={() => navigate('/SignUp')}> 회원가입하기 </span>
 				</div>
 			</div>
 		</div>
