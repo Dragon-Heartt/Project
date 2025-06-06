@@ -50,7 +50,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="frame">
+    <div className="signup-page">
       <div className="frame-wrapper">
         <div className="free-icon-home-wrapper" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <img

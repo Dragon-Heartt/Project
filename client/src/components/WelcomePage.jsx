@@ -46,7 +46,8 @@ const WelcomePage = () => {
     };
 
     return (
-        <div className="container">
+        <div className="welcome-page">
+            <div className="container">
             <div className="top-right-buttons">
                 <button className="sign-button" onClick={() => navigate('/signup')}>Sign Up</button>
                 <button className="sign-button" onClick={() => navigate('/signin')}>Sign In</button>
@@ -67,6 +68,7 @@ const WelcomePage = () => {
                 <img src={dragon6} className="floating-element element6" alt="decoration" width="150" />
                 <img src={dragon7} className="floating-element element7" alt="decoration" width="75" />
                 <img src={dragon8} className="floating-element element8" alt="decoration" width="100" />
+            </div>
             </div>
         </div>
     );
