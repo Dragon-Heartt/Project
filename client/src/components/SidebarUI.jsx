@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import "./SidebarUI.css";
 
 function SidebarUI() {
@@ -18,16 +17,24 @@ function SidebarUI() {
 
 	// 로그인 상태 확인
 	useEffect(() => {
-		const token = Cookies.get('access_token');
+		const token = localStorage.getItem('access_token');
 		if (token) {
-			// JWT 토큰에서 사용자 정보 추출 (실제로는 백엔드에서 사용자 정보를 가져와야 함)
-			// 여기서는 간단히 localStorage에서 사용자 이메일을 가져오거나 토큰을 디코딩
-			const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-			setUser({ email: userEmail });
+			const userEmail = localStorage.getItem('userEmail');
+			if (userEmail) {
+				setUser({ email: userEmail });
+			} else {
+				setUser(null);
+			}
 		} else {
 			setUser(null);
 		}
 	}, []);
+	const handleLogout = () => {
+		localStorage.removeItem('access_token');
+		localStorage.removeItem('userEmail');
+		setUser(null);
+		navigate('/signin');
+	};
 
 	const handleCategoryClick = () => {
 		setShowCategoryBar(!showCategoryBar);
@@ -131,18 +138,17 @@ function SidebarUI() {
 						</div>
 					))}
 
-					{/* 구분선 */}
-					<div className="divider"></div>
-
-					{/* 로그인 버튼 */}
-					<div className="menu-item" onClick={handleLoginClick}>
-						<div className="menu-icon">
-							👤
+					{/* 로그인/로그아웃 버튼 */}
+					{user 
+						? <div className="menu-item" onClick={handleLogout}>
+							<div className="menu-icon">🚪</div>
+							<div className="menu-text">로그아웃</div>
 						</div>
-						<div className="menu-text">
-							로그인
+						: <div className="menu-item" onClick={handleLoginClick}>
+							<div className="menu-icon">👤</div>
+							<div className="menu-text">로그인</div>
 						</div>
-					</div>
+					}
 				</div>
 			</div>
 

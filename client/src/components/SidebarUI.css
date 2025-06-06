@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 35vh;
+  height: 33.5vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
@@ -36,11 +36,6 @@
   transition: all 0.2s ease;
   background: rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.profile-section:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: translateX(3px);
 }
 
 .profile-icon {
@@ -102,7 +97,7 @@
 
 .menu-text {
   margin-left: 15px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: #2c3e50;
   white-space: nowrap;
