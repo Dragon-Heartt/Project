@@ -34,6 +34,9 @@ const Login = () => {
 					sameSite: 'lax'
 				});
 				
+				// 사용자 이메일을 localStorage에 저장
+				localStorage.setItem('userEmail', email);
+				
 				console.log('✅ 로그인 성공, 토큰 저장됨');
 				alert('로그인 성공!');
 				navigate('/main');
@@ -49,7 +52,8 @@ const Login = () => {
 	};
 
 	return (
-		<div className="login-bg">
+		<div className="login-page">
+			<div className="login-bg">
 			<button className="home-btn" onClick={() => navigate('/')}>
 			    <img src={homeicon} alt="home" className="home-icon" />
 			</button>
@@ -114,6 +118,7 @@ const Login = () => {
 					<span className="link-text" onClick={() => navigate('/signup')}> 회원가입하기 </span>
 				</div>
 			</div>
+		</div>
 		</div>
 	);
 };
