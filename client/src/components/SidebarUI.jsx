@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./SidebarUI.css";
+import { BiUser } from "react-icons/bi";
+import { BiCheckSquare } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
+import { BiDownload } from "react-icons/bi";
+import { FiLogIn } from "react-icons/fi";
+import { LuLogOut } from "react-icons/lu";
 
 function SidebarUI() {
 	const navigate = useNavigate();
@@ -71,19 +77,19 @@ function SidebarUI() {
 			id: 'category',
 			label: '흡연구역 카테고리 선택',
 			onClick: handleCategoryClick,
-			icon: '📋'
+			icon: <BiCheckSquare />
 		},
 		{ 
 			id: 'register',
 			label: '흡연구역 신청',
 			onClick: () => console.log('흡연구역 신청'),
-			icon: '📍'
+			icon: <BiEdit />
 		},
 		{ 
 			id: 'save',
 			label: '이미지 저장',
 			onClick: () => console.log('이미지 저장'),
-			icon: '💾'
+			icon: <BiDownload />
 		}
 	];
 
@@ -115,7 +121,7 @@ function SidebarUI() {
 					{/* 프로필 섹션 */}
 					<div className="profile-section" onClick={handleProfileClick}>
 						<div className="profile-icon">
-							{user ? '👤' : '❓'}
+							<BiUser />
 						</div>
 						<div className="profile-text">
 							{user ? user.email : '로그인 필요'}
@@ -141,11 +147,11 @@ function SidebarUI() {
 					{/* 로그인/로그아웃 버튼 */}
 					{user 
 						? <div className="menu-item" onClick={handleLogout}>
-							<div className="menu-icon">🚪</div>
+							<div className="menu-icon"><LuLogOut /></div>
 							<div className="menu-text">로그아웃</div>
 						</div>
 						: <div className="menu-item" onClick={handleLoginClick}>
-							<div className="menu-icon">👤</div>
+							<div className="menu-icon"><FiLogIn /></div>
 							<div className="menu-text">로그인</div>
 						</div>
 					}
