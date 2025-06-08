@@ -23,7 +23,7 @@ function App() {
             path="/main"
             element={
               <div className="map-layout">
-                <SidebarUI />
+                <SidebarUI isOpen={isOpen} onToggle={() => setIsOpen(prev => !prev)} />
                 <GoogleMap />
               </div>
             }

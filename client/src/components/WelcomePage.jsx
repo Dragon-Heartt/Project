@@ -28,7 +28,7 @@ const HighlightText = ({ children }) => {
     return (
         <span
             ref={ref}
-            className="highlight-font mouse-glow"
+            className="highlight-font mouse-glow focus-in-expand"
             style={pos.active ? { '--x': `${pos.x}px`, '--y': `${pos.y}px` } : {}}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
