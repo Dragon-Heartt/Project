@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import SignUp from './SignUp';
 
 /**
  * 1) 로그인 폼에서 제출 시, FastAPI의 /auth/login 엔드포인트로 POST 요청을 보내고
@@ -13,6 +14,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -164,12 +166,13 @@ function Login() {
 
           <div className="login-form-bottom">
             <span>or</span>
-            <a href="/signup" className="login-link">
+            <button type="button" className="login-link" onClick={() => setShowSignUp(true)}>
               Create new account
-            </a>
+            </button>
           </div>
         </form>
       </div>
+      {showSignUp && <SignUp onClose={() => setShowSignUp(false)} />}
     </div>
   );
 }
