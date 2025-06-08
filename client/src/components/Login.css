@@ -51,11 +51,6 @@
 }
 
 .color-change{
-  animation: bounceY 2s ease-in-out infinite alternate;
-  /* SVG 요소에 transform을 먹이려면 이 두 줄이 있으면 안정적 */
-  transform-box: fill-box;
-  transform-origin: top left;
-
 	-webkit-animation: color-change 4s linear infinite alternate both;
 			animation: color-change 4s linear infinite alternate both;
   }
@@ -73,11 +68,6 @@
 	0% { background-position: 100% 50%; }
 	100% { background-position: 0% 50%; }
   }
-
-@keyframes bounceY {
-  from { transform: translateY(0);   }
-  to   { transform: translateY(-200px); }
-}
 
 
 .login-form-bg {
@@ -188,7 +178,7 @@
 }
 .login-btn {
   width: 100%;
-  background: linear-gradient(90deg, #8ec6f7 0%, #ffb86c 100%);
+  background: linear-gradient(90deg, #a9d7ff 0%, #376cff 100%);
   color: #fff;
   font-size: 1.08rem;
   font-weight: 700;
