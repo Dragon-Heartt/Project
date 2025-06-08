@@ -1,139 +1,273 @@
-.login-page {
-	width: 100vw;
-	height: 100vh;
-	margin: 0;
-	padding: 0;
+/* 전체 레이아웃 */
+.login-root {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #fff;
 }
 
-.login-page .login-bg {
-	width: 100vw;
-	height: 100vh;
-	background: linear-gradient(180deg, #8ec6f7 0%, #e3ecf7 100%);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-    position: relative;
-	min-height: 100vh;
+/* 왼쪽 그라데이션 + wave */
+.login-wave-bg {
+  position: relative;
+  flex: 1;
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  animation: bg-pan-left 8s linear infinite alternate both;
+}
+.login-wave-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-align: left;
+  max-width: 320px;
+  margin-left: 40px;
+}
+.login-profile-icon {
+  margin-bottom: 30px;
+}
+.login-wave-content h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.login-wave-content p {
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+  opacity: 0.95;
 }
 
-.login-page .home-btn {
-    position: absolute;
-	top: 32px;
-	left: 32px;
-	background: #fff;
-	border: none;
-	border-radius: 50%;
-	width: 56px;
-	height: 56px;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-	cursor: pointer;
-	transition: transform 0.2s;
-	display: flex;
-    align-items: center;
-    justify-content: center;
-	z-index: 10;
-}
-.login-page .home-btn:hover {
-	transform: scale(1.12);
-    }
-
-.login-page .home-icon {
-	width: 32px;
-	height: 32px;
+.login-wave-border {
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.login-page .login-box {
-	background: #fff;
-	border-radius: 4px;
-	box-shadow: 6px 8px 12px rgba(0,0,0,0.13);
-	padding: 48px 64px 32px 64px;
-	display: flex;
-	flex-direction: column;
-    align-items: center;
-	min-width: 400px;
-	min-height: 420px;
-    position: relative;
-    }
+.color-change{
+  animation: bounceY 2s ease-in-out infinite alternate;
+  /* SVG 요소에 transform을 먹이려면 이 두 줄이 있으면 안정적 */
+  transform-box: fill-box;
+  transform-origin: top left;
 
-.login-page .login-title {
-	font-size: 2.5rem;
-	font-weight: bold;
-	margin-bottom: 16px;
-	margin-top: 0;
+	-webkit-animation: color-change 4s linear infinite alternate both;
+			animation: color-change 4s linear infinite alternate both;
+  }
+  @-webkit-keyframes color-change {
+	0% { fill: #4dd8ff; }
+	100% { fill: #4e3dff; }
+  }
+  
+  @keyframes color-change {
+	  0% { fill: #4dd8ff; }
+	  100% { fill: #4e3dff; }
+	}
+  
+  @keyframes bg-pan-left {
+	0% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+  }
+
+@keyframes bounceY {
+  from { transform: translateY(0);   }
+  to   { transform: translateY(-200px); }
 }
 
-.login-page .mainicon {
-	width: 80px;
-	height: 80px;
-	margin: 12px 0 24px 0;
-	transition: transform 0.7s cubic-bezier(.4,2,.6,1);
-    }
-.login-page .mainicon:hover {
-	transform: rotate(360deg) scale(1.08);
-    }
 
-.login-page .login-form {
-	width: 100%;
-	display: flex;
+.login-form-bg {
+  flex: 1;
+  min-width: 340px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: -2px 0 16px 0 rgba(142,198,247,0.08);
+  position: relative;
+}
+.login-form {
+  width: 340px;
+  background: transparent;
+  border-radius: 18px;
+  box-shadow: 0 2px 24px 0 rgba(142,198,247,0.10);
+  padding: 38px 32px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.login-form-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.login-form-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf5fe;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 2px 8px #8ec6f7a0;
+}
+
+/* 입력 그룹 */
+.login-input-group {
+  margin-bottom: 12px;
+}
+.login-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #f6faff;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  border: 1.5px solid #e3eaf3;
+  transition: box-shadow 0.2s, border 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(142,198,247,0.04);
+  position: relative;
+}
+.login-input-icon {
+  margin-left: 12px;
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+.login-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 14px 12px 14px 0;
+  color: #222;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.login-input::placeholder {
+  color: #b0b8c1;
+  font-weight: 400;
+  opacity: 1;
+}
+/* 찰랑거림 애니메이션 */
+.login-input:focus {
+  background: #eaf5fe;
+  animation: waveInput 0.35s cubic-bezier(.36,1.56,.64,1) 1;
+}
+@keyframes waveInput {
+  0% { box-shadow: 0 0 0 0 #8ec6f7; }
+  40% { box-shadow: 0 0 0 4px #8ec6f7a0; }
+  100% { box-shadow: 0 0 0 0 #8ec6f7; }
+}
+.login-input-wrap:focus-within {
+  border: 1.5px solid #8ec6f7;
+  box-shadow: 0 2px 12px 0 #8ec6f7a0;
+}
+
+/* 링크, 버튼 */
+.login-form-links {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.login-link {
+  color: #8ec6f7;
+  font-size: 0.97rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-link:hover {
+  color: #4a90e2;
+  text-decoration: underline;
+}
+.login-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #8ec6f7 0%, #ffb86c 100%);
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 24px;
+  padding: 13px 0 12px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px 0 #8ec6f7a0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+.login-btn:disabled {
+  background: #b5d8f7;
+  color: #fff;
+  cursor: not-allowed;
+}
+.login-form-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.97rem;
+  color: #b0b8c1;
+}
+
+@media (max-width: 900px) {
+  .login-root {
     flex-direction: column;
-	gap: 10px;
-	margin-bottom: 18px;
-    }
-.login-page .login-form label {
-	font-size: 1.1rem;
-	font-weight: 500;
-	margin-bottom: 2px;
-	margin-top: 8px;
+  }
+  .login-wave-bg, .login-form-bg {
+    min-width: 100vw;
+    width: 100vw;
+    border-radius: 0;
+  }
+  .login-form {
+    width: 95vw;
+    min-width: 0;
+    padding: 28px 8vw 24px 8vw;
+  }
+  .login-wave-content {
+    margin-left: 0;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .login-wave-svg {
+    display: none;
+  }
 }
-.login-page .login-form input {
-	padding: 10px 12px;
-	border: 1.5px solid #b5d2f3;
-	border-radius: 6px;
-	font-size: 1.1rem;
-	outline: none;
-	transition: border-color 0.2s;
-	margin-bottom: 6px;
-    }
-.login-page .login-form input.input-focus {
-	border-color: #3d49cf;
-	box-shadow: 0 0 0 2px #e3ecf7;
+.color-change-2x{
+  -webkit-animation: color-change-2x 4s linear infinite alternate both;
+          animation: color-change-2x 4s linear infinite alternate both;
 }
-
-.login-page .login-btn {
-	margin-top: 12px;
-	padding: 0.8rem 0;
-	background: #3d49cf;
-	color: #fff;
-	border: none;
-	border-radius: 30px;
-	font-size: 1.15rem;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background 0.2s, transform 0.15s;
-	box-shadow: 0 2px 8px rgba(61,73,207,0.08);
-}
-.login-page .login-btn.active,
-.login-page .login-btn:active {
-	background: #5a6cf7;
-	transform: scale(1.07);
-    }
-.login-page .login-btn:hover {
-	background: #545ed4;
-	transform: scale(1.04);
+@-webkit-keyframes color-change-2x {
+  0% { background: #4dd8ff; }
+  100% { background: #4e3dff; }
 }
 
-.login-page .signup-link {
-	margin-top: 18px;
-	font-size: 1rem;
-	text-align: center;
+@keyframes color-change-2x {
+	0% { background: #4dd8ff; }
+	100% { background: #4e3dff; }
+  }
+
+@keyframes bg-pan-left {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-.login-page .link-text {
-	color: #3d49cf;
-	font-weight: 600;
-	cursor: pointer;
-	transition: color 0.18s;
-    }
-.login-page .link-text:hover {
-	color: #1a237e;
-	text-decoration: underline;
-    }
+
+.wave-anim-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  animation: color-change-2x 4s linear infinite alternate both;
+  -webkit-clip-path: url(#wave-mask);
+  clip-path: url(#wave-mask);
+  z-index: 2;
+}

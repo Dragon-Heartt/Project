@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 35vh;
+  height: 33.5vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
@@ -38,13 +38,8 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.profile-section:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: translateX(3px);
-}
-
 .profile-icon {
-  font-size: 18px;
+  font-size: 28px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -86,13 +81,13 @@
 }
 
 .menu-item:hover {
-  background: #DAEFFF;
+  background: #87bae0;
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .menu-icon {
-  font-size: 18px;
+  font-size: 25px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -100,9 +95,13 @@
   transition: all 0.3s ease;
 }
 
+.menu-item:hover .menu-icon svg {
+  stroke: #ffffff;
+}
+
 .menu-text {
   margin-left: 15px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: #2c3e50;
   white-space: nowrap;
@@ -110,6 +109,17 @@
   transform: translateX(-20px);
   transition: all 0.3s ease;
   font-family: 'Pretendard', sans-serif;
+}
+
+
+.menu-item:hover .menu-text {
+  color: #ffffff;
+  transition-delay: 0s;
+}
+
+.menu-item:hover .menu-icon {
+  color: #ffffff;
+  transition-delay: 0s;
 }
 
 .sidebar.expanded .menu-text {
@@ -126,22 +136,6 @@
   margin: 10px 15px;
 }
 
-/* 각 메뉴 아이템에 순차적으로 애니메이션 딜레이 적용 */
-.menu-item:nth-child(2) .menu-text {
-  transition-delay: 0.1s;
-}
-
-.menu-item:nth-child(3) .menu-text {
-  transition-delay: 0.15s;
-}
-
-.menu-item:nth-child(4) .menu-text {
-  transition-delay: 0.2s;
-}
-
-.menu-item:nth-child(6) .menu-text { /* 로그인 버튼 */
-  transition-delay: 0.25s;
-}
 
 /* 호버 상태에서의 아이콘 애니메이션 */
 .menu-item:hover .menu-icon,

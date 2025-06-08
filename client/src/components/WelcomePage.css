@@ -165,24 +165,39 @@
     background: none;
     transition: color 0.2s;
 }
-.welcome-page .mouse-glow:hover {
-    color: #fff;
-}
-.welcome-page .mouse-glow::after {
-    content: '';
-    pointer-events: none;
-    position: absolute;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    opacity: 0.7;
-    border-radius: 8px;
-    transition: opacity 0.2s;
-    background: radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), rgba(61,73,207,0.35) 0%, rgba(255,255,255,0.0) 80%);
-    z-index: 2;
-    pointer-events: none;
-    mix-blend-mode: lighten;
-    will-change: background;
-}
+
 .welcome-page .mouse-glow:not(:hover)::after {
     opacity: 0;
 } 
+
+.focus-in-expand {
+  -webkit-animation: focus-in-expand 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: focus-in-expand 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@-webkit-keyframes focus-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    -webkit-filter: blur(12px);
+            filter: blur(12px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    opacity: 1;
+  }
+}
+@keyframes focus-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    -webkit-filter: blur(12px);
+            filter: blur(12px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    opacity: 1;
+  }
+}
