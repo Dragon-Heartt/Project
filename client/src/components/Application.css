@@ -14,9 +14,9 @@
   background: #e0f2f7;
   border-radius: 24px;
   box-shadow: 0 8px 40px 0 rgba(20,24,36,0.18);
-  width: 900px;
+  width: 600px;
   max-width: 98vw;
-  min-height: 520px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -47,12 +47,12 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  min-height: 420px;
+  min-height: 400px;
 }
 
 .application-form {
   flex: 1.1;
-  padding: 48px 36px 36px 36px;
+  padding: 30px 36px 30px 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,7 +63,7 @@
   font-size: 2rem;
   font-weight: 800;
   color: #1a3a4a;
-  margin-bottom: 18px;
+  margin: 18px 0;
   letter-spacing: 0.01em;
 }
 .application-form label {
@@ -77,7 +77,7 @@
 }
 .application-form input[type="text"],
 .application-form input[type="file"] {
-  width: 100%;
+  width: 67%;
   padding: 13px 14px;
   border-radius: 0;
   border: none;
@@ -99,6 +99,14 @@
   background: none;
   margin-top: 2px;
 }
+.application-step-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 150px;
+  } 
 .application-photo-preview {
   width: 100%;
   max-width: 220px;
@@ -222,4 +230,260 @@
   .application-map {
     height: 220px;
   }
-} 
+}
+
+.application-location-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.application-location-find-btn {
+  background: #3d49cf;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 22px;
+  box-shadow: 0 2px 8px 0 #8ec6f7a0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.application-location-find-btn:active {
+  background: #2a357a;
+}
+
+/* 지도 모달 */
+.application-map-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 50, 60, 0.75);
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.application-map-modal {
+  background: #e0f2f7;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px 0 rgba(20,24,36,0.18);
+  width: 520px;
+  max-width: 98vw;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 28px 24px 24px 24px;
+  animation: popupIn 0.3s cubic-bezier(.36,1.56,.64,1);
+}
+.application-map-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 2.1rem;
+  color: #7b7b7b;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s;
+}
+.application-map-close-btn:hover {
+  color: #3d49cf;
+}
+.application-map-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+.application-map-modal-address {
+  color: #1a3a4a;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px 0 #8ec6f7a0;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.application-map-modal-map {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px 0 #8ec6f7a0;
+  background: #eaf6fb;
+  margin-bottom: 18px;
+}
+.application-map-select-btn {
+  width: 100%;
+  background: #3d49cf;
+  color: #fff;
+  font-size: 1.13rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0 0 12px 12px;
+  padding: 14px 0 13px 0;
+  box-shadow: 0 2px 8px 0 #8ec6f7a0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.application-map-select-btn:active {
+  background: #2a357a;
+}
+
+.application-map-section-empty {
+  display: none;
+}
+
+.application-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  width: 100%;
+}
+
+.application-location-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.application-location-row input {
+  width: 220px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #bcdffb;
+  background: #f7fbff;
+  font-size: 1rem;
+}
+
+.application-location-find-btn {
+  background: #8ec6f7;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.application-location-find-btn:hover {
+  background: #5bb0f6;
+}
+
+.application-next-btn, .application-btn {
+  margin-top: 30px;
+  background: #8ec6f7;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 36px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e3f1ff;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.application-next-btn:disabled, .application-btn:disabled {
+  background: #cbe6fd;
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.application-next-btn:hover:not(:disabled), .application-btn:hover:not(:disabled) {
+  background: #5bb0f6;
+}
+
+.application-card-group {
+  display: flex;
+  gap: 18px;
+  margin: 18px 0 0 0;
+  justify-content: center;
+}
+
+.application-card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 130px;
+  background: #f7fbff;
+  border: 2px solid #e3f1ff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px #e3f1ff;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #345c7f;
+  transition: border 0.2s, background 0.2s, color 0.2s;
+  position: relative;
+}
+.application-card-btn.selected {
+  border: 2.5px solid #8ec6f7;
+  background: #eaf5ff;
+  color: #3a7fc1;
+  box-shadow: 0 4px 16px #cbe6fd;
+}
+.application-card-btn span {
+  margin-top: 10px;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.icon-placeholder {
+    width: 48px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    margin-bottom: 2px;
+  }
+
+.application-photo-preview {
+  margin-top: 18px;
+  width: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1.5px solid #bcdffb;
+  box-shadow: 0 2px 8px #e3f1ff;
+}
+
+.application-title {
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: bold;
+  margin-bottom: 18px;
+  margin-top: 0;
+  letter-spacing: -0.5px;
+}
+
+.application-title-input {
+  width: 80%;
+  max-width: 340px;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  border: 1.5px solid #bcdffb;
+  border-radius: 10px;
+  background: #f7fbff;
+  margin-bottom: 24px;
+  outline: none;
+  transition: border 0.2s;
+}
+.application-title-input:focus {
+  border: 2px solid #8ec6f7;
+  background: #eaf5ff;
+}
+.application-title-input::placeholder {
+  color: #b0b8c1;
+  font-size: 1.05rem;
+  letter-spacing: -0.5px;
+}
+

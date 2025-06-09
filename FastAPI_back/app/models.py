@@ -16,11 +16,12 @@ class MapPin(Base):
     __tablename__ = "map_pins"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(100), index=True, nullable=False)
-    inside = Column(Boolean, default=False)   # 실내 여부
-    chair = Column(Boolean, default=False)    # 의자 유무
-    shadow = Column(Boolean, default=False)   # 차양막 유무
+    user_id = Column(Integer, ForeignKey("users.id"))  # 이 줄 추가!
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
+    inside = Column(Boolean, default=False)
+    chair = Column(Boolean, default=False)
+    shadow = Column(Boolean, default=False)
+    title = Column(String(100), index=True, nullable=False)
     description = Column(String(500), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
