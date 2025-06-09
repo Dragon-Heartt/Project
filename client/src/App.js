@@ -6,6 +6,7 @@ import GoogleMap from "./components/GoogleMap";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import MyPage from "./components/MyPage";
+import Application from "./components/Application";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/signin" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/Application" element={<Application />} />
           <Route
             path="/main"
             element={
