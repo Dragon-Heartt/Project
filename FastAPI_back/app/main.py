@@ -1,12 +1,12 @@
 # app/main.py
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware 
 
 from .routes import auth  # 상대 경로로 인증 관련 라우터 가져오기
-from .database import engine, Base
+from .routes import smokingZone  # 흡연구역 관련 라우터 가져오기
+from app.database import engine, Base
 from fastapi.security import OAuth2PasswordBearer
-from . import models  # 이 줄을 추가하세요!
 
 # ========== DB 테이블 생성 ==========  
 # 실행 시점에 models.py에 정의된 테이블을 모두 생성해 준다.
@@ -21,7 +21,7 @@ app = FastAPI(title="Dragon-Heart FastAPI Backend")
 # 반드시 allow_origins에 해당 출처를 명시해야 쿠키나 헤더 정보가 전달된다.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],   # 프론트가 띄워지는 주소
+    allow_origins=["http://localhost:3000"],   # React 개발 서버 주소
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,8 +31,8 @@ app.add_middleware(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 # ========== 라우터 등록 ==========
-app.include_router(auth.router)
-
+app.include_router(auth.router, prefix="/auth")
+app.include_router(smokingZone.router, prefix="/smokingZone")
 # (나중에 MapPin, 기타 기능 라우터가 있으면 아래처럼 추가)
 # from .routes import maps
 # app.include_router(maps.router)
