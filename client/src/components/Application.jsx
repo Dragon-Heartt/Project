@@ -12,8 +12,8 @@ import './Application.css';
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
 
 const SPACE_TYPES = [
-  { key: 'indoor', label: '실내', icon: <div className="icon-placeholder"><TbDoorEnter/></div> },
-  { key: 'outdoor', label: '외부', icon: <div className="icon-placeholder"><TbDoorExit/></div> },
+  { key: true, label: '실내', icon: <div className="icon-placeholder"><TbDoorEnter/></div> },
+  { key: false, label: '외부', icon: <div className="icon-placeholder"><TbDoorExit/></div> },
 ];
 const CHAIR_TYPES = [
   { key: true, label: '의자 있음', icon: <div className="icon-placeholder"><TbArmchair/></div> },
@@ -167,13 +167,13 @@ function Application({ onClose }) {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('address', address);
-      formData.append('lat', lat);
-      formData.append('lng', lng);
+      formData.append('latitude', lat);
+      formData.append('longitude', lng);
       formData.append('space_type', spaceType);
       formData.append('has_chair', hasChair ? 1 : 0);
       formData.append('has_shade', hasShade ? 1 : 0);
       if (photo) formData.append('photo', photo);
-      const res = await fetch('http://localhost:8000/api/apply', {
+      const res = await fetch('http://localhost:8000/smokingZone/smokingM', {
         method: 'POST',
         body: formData
       });

@@ -1,9 +1,7 @@
-# app/routes/smokingZone.py
-
 from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models import MapPin
+from ..database import get_db        # <- 상대경로!
+from ..models import MapPin
 import os
 from datetime import datetime
 
@@ -12,11 +10,11 @@ router = APIRouter()
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@router.post("/api/apply")
+@router.post("/smokingM")
 async def apply_location(
-    address: str = Form(...),
-    lat: float = Form(...),
-    lng: float = Form(...),
+    title: str = Form(...),
+    latitude: float = Form(...),
+    longitude: float = Form(...),
     space_type: str = Form(...),
     has_chair: int = Form(...),
     has_shade: int = Form(...),
@@ -34,13 +32,14 @@ async def apply_location(
 
     # DB 저장
     new_pin = MapPin(
-        title=address,  # title을 address로 저장 (혹시 따로 받으면 바꿔)
-        inside=(space_type == 'indoor'),
-        chair=bool(has_chair),
-        shadow=bool(has_shade),
-        latitude=lat,
-        longitude=lng,
-        description=photo_url  # description 필드를 이미지 경로로 사용
+        user_id=1,
+        title=title,
+        space_type=bool(space_type),
+        has_chair=bool(has_chair),
+        has_shade=bool(has_shade),
+        latitude=latitude,
+        longitude=longitude,
+        description=photo_url
     )
 
     db.add(new_pin)
