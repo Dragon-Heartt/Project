@@ -6,6 +6,18 @@ import './GoogleMap.css'; // 기존 스타일 재사용
 // API 키를 직접 설정 (임시 해결책)
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
 
+function getMarkerColor({ space_type, has_chair, has_shade }) {
+	if (space_type && has_chair && has_shade) return 'blue';
+	if (space_type && has_chair && !has_shade) return 'yellow';
+	if (space_type && !has_chair && has_shade) return 'green';
+	if (space_type && !has_chair && !has_shade) return 'red';
+	if (!space_type && !has_chair && !has_shade) return 'purple';
+	if (!space_type && !has_chair && has_shade) return 'orange';
+	if (!space_type && has_chair && !has_shade) return 'pink';
+	if (!space_type && has_chair && has_shade) return 'brown';
+	return 'gray';
+  }
+
 function loadGoogleMapsScript(callback) {
 	if (window.google && window.google.maps) {
 		callback();
@@ -46,6 +58,10 @@ const GoogleMap = () => {
 	const [mapLoaded, setMapLoaded] = useState(false);
 	const [error, setError] = useState(null);
 
+	// smoking zones state
+	const [smokingZones, setSmokingZones] = useState([]); // DB에서 불러온 흡연구역 목록
+	const [zoneMarkers, setZoneMarkers] = useState([]); // 지도에 표시된 마커 객체들
+
 	// 현재 위치 pulse overlay 관리
 	const [pulsePos, setPulsePos] = useState(null);
 
@@ -64,8 +80,8 @@ const GoogleMap = () => {
 			}
 			try {
 				console.log('지도 초기화 시도...');
-			mapInstance.current = new window.google.maps.Map(mapRef.current, {
-				center: DEFAULT_CENTER,
+				mapInstance.current = new window.google.maps.Map(mapRef.current, {
+					center: DEFAULT_CENTER,
 					zoom: 18,
 					mapTypeControl: true,
 					streetViewControl: true,
@@ -75,20 +91,20 @@ const GoogleMap = () => {
 
 				console.log('지도 초기화 성공');
 
-			// 기본 마커 (AdvancedMarkerElement 사용)
-			if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
-				markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
-					map: mapInstance.current,
-					position: DEFAULT_CENTER,
-				});
-			} else {
-				// fallback: 기존 Marker (구버전 브라우저 호환)
-				markerRef.current = new window.google.maps.Marker({
-					position: DEFAULT_CENTER,
-					map: mapInstance.current,
-				});
-			}
-			setMapLoaded(true);
+				// 기본 마커 (AdvancedMarkerElement 사용)
+				if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
+					markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
+						map: mapInstance.current,
+						position: DEFAULT_CENTER,
+					});
+				} else {
+					// fallback: 기존 Marker (구버전 브라우저 호환)
+					markerRef.current = new window.google.maps.Marker({
+						position: DEFAULT_CENTER,
+						map: mapInstance.current,
+					});
+				}
+				setMapLoaded(true);
 			} catch (err) {
 				console.error('지도 초기화 실패:', err);
 				setError('지도를 초기화하는데 실패했습니다.');
@@ -100,6 +116,53 @@ const GoogleMap = () => {
 			window.initMap = undefined;
 		};
 	}, []);
+
+	// 지도 뷰포트(화면) 변경 시마다 마커 fetch
+	useEffect(() => {
+		if (!mapLoaded || !mapInstance.current) return;
+		const fetchAndRender = () => {
+			const bounds = mapInstance.current.getBounds();
+			if (!bounds) return;
+			const ne = bounds.getNorthEast();
+			const sw = bounds.getSouthWest();
+			// TODO: 실제 백엔드 엔드포인트/파라미터에 맞게 수정
+			// ex) /api/smoking-zones?nelat=...&nelng=...&swlat=...&swlng=...
+			fetch(`http://localhost:8000/map/pins`)
+				.then((res) => res.json())
+				.then((data) => {
+					setSmokingZones(data); // [{id, lat, lng, inside, chair, shadow, ...}]
+				});
+		};
+		fetchAndRender();
+		const listener = mapInstance.current.addListener('idle', fetchAndRender);
+		return () => window.google.maps.event.removeListener(listener);
+	}, [mapLoaded]);
+
+	// smokingZones가 바뀔 때마다 마커 렌더링
+	useEffect(() => {
+		if (!mapInstance.current) return;
+		// 기존 마커 제거
+		zoneMarkers.forEach((m) => m.setMap(null));
+		// 새 마커 생성
+		const newMarkers = smokingZones.map((zone) => {
+			const color = getMarkerColor(zone); // zone: {inside, chair, shadow, ...}
+			const marker = new window.google.maps.Marker({
+				position: { lat: zone.latitude, lng: zone.longitude }, // DB 필드명에 맞게 수정
+				map: mapInstance.current,
+				icon: {
+					path: window.google.maps.SymbolPath.CIRCLE,
+					scale: 10,
+					fillColor: color,
+					fillOpacity: 1,
+					strokeWeight: 1,
+					strokeColor: '#333',
+				},
+			});
+			// 마커 클릭 시 info window 등 추가 가능
+			return marker;
+		});
+		setZoneMarkers(newMarkers);
+	}, [smokingZones]);
 
 	const handleCurrentLocation = () => {
 		if (!window.google || !window.google.maps || !mapInstance.current) {

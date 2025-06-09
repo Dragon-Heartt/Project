@@ -4,7 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware 
 
 from .routes import auth  # 상대 경로로 인증 관련 라우터 가져오기
-from .routes import smokingZone  # 흡연구역 관련 라우터 가져오기
+from .routes import smokingZone 
+from .routes import map
 from app.database import engine, Base
 from fastapi.security import OAuth2PasswordBearer
 
@@ -33,6 +34,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 # ========== 라우터 등록 ==========
 app.include_router(auth.router, prefix="/auth")
 app.include_router(smokingZone.router, prefix="/smokingZone")
+app.include_router(map.router, prefix="/map")
 # (나중에 MapPin, 기타 기능 라우터가 있으면 아래처럼 추가)
 # from .routes import maps
 # app.include_router(maps.router)
