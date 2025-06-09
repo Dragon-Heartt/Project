@@ -72,6 +72,16 @@ function SidebarUI() {
 		});
 	};
 
+	const handleRegisterClick = () => {
+		const token = localStorage.getItem('access_token');
+		if (!token) {
+			alert('로그인 후 이용 가능한 기능입니다.');
+			navigate('/signin');
+			return;
+		}
+		navigate('/Application');
+	};
+
 	const menuItems = [
 		{ 
 			id: 'category',
@@ -82,7 +92,7 @@ function SidebarUI() {
 		{ 
 			id: 'register',
 			label: '흡연구역 신청',
-			onClick: () => console.log('흡연구역 신청'),
+			onClick: handleRegisterClick,
 			icon: <BiEdit />
 		},
 		{ 
