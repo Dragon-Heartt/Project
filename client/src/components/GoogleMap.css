@@ -108,22 +108,24 @@
   align-items: flex-start;
   padding: 20px 20px 16px 20px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+  min-width: 220px;
+  max-width: 320px;
 }
 
 .info-window-content .place-title {
   font-size: 18px;
   font-weight: 700;
-  color: #222;
-  margin-bottom: 12px;
+  color: #1a73e8;
+  margin-bottom: 6px;
   line-height: 1.2;
 }
 
 .info-window-content .place-type {
   font-size: 14px;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   line-height: 1.6;
 }
 
@@ -148,19 +150,21 @@
   border: none;
   border-radius: 6px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.18s;
 }
 
 .info-window-content .navigate-btn {
-  background: #4285F4;
+  background: linear-gradient(90deg, #00c73c 0%, #1ec800 100%);
   color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,199,60,0.08);
   position: relative;
 }
 
 .info-window-content .navigate-btn:hover {
-  background: #3367d6;
+  background: linear-gradient(90deg, #1ec800 0%, #00c73c 100%);
 }
 
 .info-window-content .navigate-btn::before {
@@ -169,7 +173,7 @@
   width: 18px;
   height: 18px;
   margin-right: 4px;
-  background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="white"/%3E%3C/svg%3E');
+  background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="%2300C73C"/><path d="M10 5v7.5M10 12.5l3-3M10 12.5l-3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle;
@@ -178,10 +182,13 @@
 .info-window-content .cancel-btn {
   background: #f1f3f4;
   color: #333;
+  font-weight: 600;
+  border: 1px solid #e0e0e0;
 }
 
 .info-window-content .cancel-btn:hover {
   background: #e8eaed;
+  border-color: #cfd8dc;
 }
 
 /* InfoWindow 닫기 버튼 스타일 */

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import x651 from '../assets/65-1.png';
 import NLoca from '../assets/NowLocation.png';
 import './GoogleMap.css'; // 기존 스타일 재사용
+import { createRoot } from 'react-dom/client';
 
 // API 키를 직접 설정 (임시 해결책)
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
@@ -49,6 +50,20 @@ function loadGoogleMapsScript(callback) {
 }
 
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
+
+// InfoWindow용 React 컴포넌트 추가
+const InfoWindowContent = ({ name, inside, has_chair, has_shade, onNavigate, onClose }) => (
+	<div className="info-window-content">
+		<div className="place-title">{name}</div>
+		<div className="place-type">
+			{inside ? '실내' : '실외'} / {has_chair ? '의자 있음' : '의자 없음'} / {has_shade ? '차양막 있음' : '차양막 없음'}
+		</div>
+		<div className="button-row">
+			<button className="navigate-btn" onClick={onNavigate}>길찾기</button>
+			<button className="cancel-btn" onClick={onClose}>취소</button>
+		</div>
+	</div>
+);
 
 const GoogleMap = () => {
 	const mapRef = useRef(null);
@@ -143,9 +158,9 @@ const GoogleMap = () => {
 		zoneMarkers.forEach((m) => m.setMap(null));
 		// 새 마커 생성
 		const newMarkers = smokingZones.map((zone) => {
-			const color = getMarkerColor(zone); // zone: {inside, chair, shadow, ...}
+			const color = getMarkerColor(zone);
 			const marker = new window.google.maps.Marker({
-				position: { lat: zone.latitude, lng: zone.longitude }, // DB 필드명에 맞게 수정
+				position: { lat: zone.latitude, lng: zone.longitude },
 				map: mapInstance.current,
 				icon: {
 					path: window.google.maps.SymbolPath.CIRCLE,
@@ -156,7 +171,33 @@ const GoogleMap = () => {
 					strokeColor: '#333',
 				},
 			});
-			// 마커 클릭 시 info window 등 추가 가능
+			// InfoWindow 생성
+			const infoWindow = new window.google.maps.InfoWindow({
+				content: document.createElement('div'),
+				maxWidth: 320,
+			});
+			// React로 InfoWindow 내용 렌더링
+			const infoContent = document.createElement('div');
+			infoWindow.setContent(infoContent);
+			const handleNavigate = () => {
+				// 길찾기 로직 (예: 네이버 지도, 카카오맵 등 외부 링크)
+				window.open(`https://map.naver.com/v5/directions/-/-/-/walk?c=15.00,0,0,0,dh`, '_blank');
+			};
+			const handleClose = () => infoWindow.close();
+			const root = createRoot(infoContent);
+			root.render(
+				<InfoWindowContent
+					name={zone.name || '장소명'}
+					inside={zone.inside}
+					has_chair={zone.chair}
+					has_shade={zone.shade}
+					onNavigate={handleNavigate}
+					onClose={handleClose}
+				/>
+			);
+			marker.addListener('click', () => {
+				infoWindow.open({ anchor: marker, map: mapInstance.current });
+			});
 			return marker;
 		});
 		setZoneMarkers(newMarkers);
