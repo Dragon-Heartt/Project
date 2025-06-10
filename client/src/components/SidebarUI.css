@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 33.5vh;
+  height: 25vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
@@ -49,7 +49,7 @@
 
 .profile-text {
   margin-left: 15px;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
   color: #2c3e50;
   white-space: nowrap;
@@ -87,7 +87,7 @@
 }
 
 .menu-icon {
-  font-size: 25px;
+  font-size: 38px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -161,7 +161,7 @@
   top: 90px;
   left: 300px; /* 사이드바 확장 너비만큼 */
   width: 270px;
-  height: 42.3vh;
+  height: 32.3vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   z-index: 999;

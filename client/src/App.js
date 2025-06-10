@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import MyPage from "./components/MyPage";
 import Application from "./components/Application";
+import CancelApplication from "./components/CancelApplication";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/Application" element={<Application />} />
+          <Route path="/CancelApplication" element={<CancelApplication />} />
           <Route
             path="/main"
             element={

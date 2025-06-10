@@ -94,12 +94,6 @@ function SidebarUI() {
 			label: '흡연구역 신청',
 			onClick: handleRegisterClick,
 			icon: <BiEdit />
-		},
-		{ 
-			id: 'save',
-			label: '이미지 저장',
-			onClick: () => console.log('이미지 저장'),
-			icon: <BiDownload />
 		}
 	];
 
