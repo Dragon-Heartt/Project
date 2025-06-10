@@ -123,8 +123,6 @@ const GoogleMap = () => {
 		const fetchAndRender = () => {
 			const bounds = mapInstance.current.getBounds();
 			if (!bounds) return;
-			const ne = bounds.getNorthEast();
-			const sw = bounds.getSouthWest();
 			// TODO: 실제 백엔드 엔드포인트/파라미터에 맞게 수정
 			// ex) /api/smoking-zones?nelat=...&nelng=...&swlat=...&swlng=...
 			fetch(`http://localhost:8000/map/pins`)
@@ -159,111 +157,6 @@ const GoogleMap = () => {
 				},
 			});
 			// 마커 클릭 시 info window 등 추가 가능
-			const infoWindow = new window.google.maps.InfoWindow({
-				content: `
-					<div class="info-window-content">
-						<div class="place-title">${zone.name}</div>
-						<div class="place-type">
-							<div>• 장소 유형: ${zone.type}</div>
-							<div>• 의자: ${zone.hasChair ? '있음' : '없음'}</div>
-							<div>• 차양막: ${zone.hasShade ? '있음' : '없음'}</div>
-						</div>
-						<div class="button-row">
-							<button id="navigate-button-${zone.id}" class="navigate-btn">길찾기</button>
-							<button id="cancel-button-${zone.id}" class="cancel-btn">신청 취소하기</button>
-						</div>
-					</div>
-				`,
-			});
-
-			marker.addListener("click", () => {
-				infoWindow.open({
-					anchor: marker,
-					map: mapInstance.current,
-					shouldFocus: false,
-				});
-
-				window.google.maps.event.addListenerOnce(infoWindow, "domready", () => {
-					const navigateButton = document.getElementById(`navigate-button-${zone.id}`);
-					const cancelButton = document.getElementById(`cancel-button-${zone.id}`);
-
-					if (navigateButton) {
-						navigateButton.addEventListener("click", () => {
-							if (!navigator.geolocation) {
-								alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-								return;
-							}
-
-							const options = {
-								enableHighAccuracy: true,
-								timeout: 10000,
-								maximumAge: 0
-							};
-
-							navigator.geolocation.getCurrentPosition(
-								(position) => {
-									const origin = {
-										lat: position.coords.latitude,
-										lng: position.coords.longitude,
-									};
-									const destination = {
-										lat: zone.latitude,
-										lng: zone.longitude,
-									};
-
-									const directionsService = new window.google.maps.DirectionsService();
-									const directionsRenderer = new window.google.maps.DirectionsRenderer({
-										map: mapInstance.current,
-										suppressMarkers: true,
-										polylineOptions: {
-											strokeColor: "#FF0000",
-											strokeWeight: 5,
-										},
-									});
-
-									directionsService.route(
-										{
-											origin,
-											destination,
-											travelMode: window.google.maps.TravelMode.WALKING,
-										},
-										(result, status) => {
-											if (status === "OK") {
-												directionsRenderer.setDirections(result);
-											} else {
-												alert("경로를 찾을 수 없습니다: " + status);
-											}
-										}
-									);
-								},
-								(error) => {
-									switch(error.code) {
-										case error.PERMISSION_DENIED:
-											alert("위치 정보 접근 권한이 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.");
-											break;
-										case error.POSITION_UNAVAILABLE:
-											alert("위치 정보를 사용할 수 없습니다.");
-											break;
-										case error.TIMEOUT:
-											alert("위치 정보 요청 시간이 초과되었습니다.");
-											break;
-										default:
-											alert("위치 정보를 가져오는 중 오류가 발생했습니다.");
-											break;
-									}
-								},
-								options
-							);
-						});
-					}
-
-					if (cancelButton) {
-						cancelButton.addEventListener("click", () => {
-							infoWindow.close();
-						});
-					}
-				});
-			});
 			return marker;
 		});
 		setZoneMarkers(newMarkers);
