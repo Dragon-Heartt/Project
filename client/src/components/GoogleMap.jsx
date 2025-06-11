@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import x651 from '../assets/65-1.png';
 import NLoca from '../assets/NowLocation.png';
-import './GoogleMap.css'; // 기존 스타일 재사용
+import './GoogleMap.css';
 import { createRoot } from 'react-dom/client';
 
-// API 키를 직접 설정 (임시 해결책)
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
 
 function getMarkerColor({ space_type, has_chair, has_shade }) {
@@ -17,7 +16,7 @@ function getMarkerColor({ space_type, has_chair, has_shade }) {
 	if (!space_type && has_chair && !has_shade) return 'pink';
 	if (!space_type && has_chair && has_shade) return 'brown';
 	return 'gray';
-  }
+}
 
 function loadGoogleMapsScript(callback) {
 	if (window.google && window.google.maps) {
@@ -51,7 +50,6 @@ function loadGoogleMapsScript(callback) {
 
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
 
-// InfoWindow용 React 컴포넌트 추가
 const InfoWindowContent = ({ name, inside, has_chair, has_shade, onNavigate, onClose }) => (
 	<div className="info-window-content">
 		<div className="place-title">{name}</div>
@@ -73,11 +71,9 @@ const GoogleMap = () => {
 	const [mapLoaded, setMapLoaded] = useState(false);
 	const [error, setError] = useState(null);
 
-	// smoking zones state
-	const [smokingZones, setSmokingZones] = useState([]); // DB에서 불러온 흡연구역 목록
-	const [zoneMarkers, setZoneMarkers] = useState([]); // 지도에 표시된 마커 객체들
+	const [smokingZones, setSmokingZones] = useState([]); 
+	const [zoneMarkers, setZoneMarkers] = useState([]);
 
-	// 현재 위치 pulse overlay 관리
 	const [pulsePos, setPulsePos] = useState(null);
 
 	useEffect(() => {
@@ -86,7 +82,7 @@ const GoogleMap = () => {
 			return;
 		}
 
-		console.log('API Key:', GOOGLE_MAP_API_KEY); // API 키 확인용 로그
+		console.log('API Key:', GOOGLE_MAP_API_KEY); 
 
 		loadGoogleMapsScript(() => {
 			if (!mapRef.current) {
@@ -106,14 +102,12 @@ const GoogleMap = () => {
 
 				console.log('지도 초기화 성공');
 
-				// 기본 마커 (AdvancedMarkerElement 사용)
 				if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
 					markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
 						map: mapInstance.current,
 						position: DEFAULT_CENTER,
 					});
 				} else {
-					// fallback: 기존 Marker (구버전 브라우저 호환)
 					markerRef.current = new window.google.maps.Marker({
 						position: DEFAULT_CENTER,
 						map: mapInstance.current,
@@ -126,24 +120,20 @@ const GoogleMap = () => {
 			}
 		});
 
-		// cleanup
 		return () => {
 			window.initMap = undefined;
 		};
 	}, []);
 
-	// 지도 뷰포트(화면) 변경 시마다 마커 fetch
 	useEffect(() => {
 		if (!mapLoaded || !mapInstance.current) return;
 		const fetchAndRender = () => {
 			const bounds = mapInstance.current.getBounds();
 			if (!bounds) return;
-			// TODO: 실제 백엔드 엔드포인트/파라미터에 맞게 수정
-			// ex) /api/smoking-zones?nelat=...&nelng=...&swlat=...&swlng=...
 			fetch(`http://localhost:8000/map/pins`)
 				.then((res) => res.json())
 				.then((data) => {
-					setSmokingZones(data); // [{id, lat, lng, inside, chair, shadow, ...}]
+					setSmokingZones(data); 
 				});
 		};
 		fetchAndRender();
@@ -151,12 +141,9 @@ const GoogleMap = () => {
 		return () => window.google.maps.event.removeListener(listener);
 	}, [mapLoaded]);
 
-	// smokingZones가 바뀔 때마다 마커 렌더링
 	useEffect(() => {
 		if (!mapInstance.current) return;
-		// 기존 마커 제거
 		zoneMarkers.forEach((m) => m.setMap(null));
-		// 새 마커 생성
 		const newMarkers = smokingZones.map((zone) => {
 			const color = getMarkerColor(zone);
 			const marker = new window.google.maps.Marker({
@@ -171,16 +158,13 @@ const GoogleMap = () => {
 					strokeColor: '#333',
 				},
 			});
-			// InfoWindow 생성
 			const infoWindow = new window.google.maps.InfoWindow({
 				content: document.createElement('div'),
 				maxWidth: 320,
 			});
-			// React로 InfoWindow 내용 렌더링
 			const infoContent = document.createElement('div');
 			infoWindow.setContent(infoContent);
 			const handleNavigate = () => {
-				// 길찾기 로직 (예: 네이버 지도, 카카오맵 등 외부 링크)
 				window.open(`https://map.naver.com/v5/directions/-/-/-/walk?c=15.00,0,0,0,dh`, '_blank');
 			};
 			const handleClose = () => infoWindow.close();

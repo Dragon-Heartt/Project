@@ -1,21 +1,18 @@
 import axios from 'axios';
 
-// 로컬 FastAPI 서버만 사용
 const API_BASE_URL = 'http://localhost:8000';
 
 console.log('🚀 API 서버:', API_BASE_URL);
 
-// axios 인스턴스 생성
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 5000, // 5초 타임아웃
+  timeout: 5000, 
 });
 
-// 요청 인터셉터
 api.interceptors.request.use(
   (config) => {
     console.log('📤 API 요청:', `${API_BASE_URL}${config.url}`, config.method?.toUpperCase());
@@ -55,7 +52,7 @@ api.interceptors.response.use(
       console.log('🔒 토큰 만료 또는 인증 실패 - 로그인 페이지로 이동');
       localStorage.removeItem('access_token');
       window.location.href = '/signin';
-      }
+    }
     
     return Promise.reject(error);
   }
