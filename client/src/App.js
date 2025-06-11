@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import WelcomePage from "./components/WelcomePage";
+import SidebarUI from "./components/SidebarUI";
+import GoogleMap from "./components/GoogleMap";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import GoogleMap from "./components/GoogleMap";
-import SidebarUI from "./components/SidebarUI";
+import MyPage from "./components/MyPage";
+import Application from "./components/Application";
+import CancelApplication from "./components/CancelApplication";
 import "./App.css";
 
 function App() {
@@ -17,11 +20,14 @@ function App() {
           <Route path="/" element={<WelcomePage />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/Application" element={<Application />} />
+          <Route path="/CancelApplication" element={<CancelApplication />} />
           <Route
             path="/main"
             element={
               <div className="map-layout">
-                <SidebarUI isOpen={isOpen} onToggle={() => setIsOpen(o => !o)} />
+                <SidebarUI isOpen={isOpen} onToggle={() => setIsOpen(prev => !prev)} />
                 <GoogleMap />
               </div>
             }

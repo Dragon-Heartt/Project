@@ -1,140 +1,146 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import freeIconHomeButton76061422 from "../assets/free-icon-home-button-7606142.png";
-import freeIconNext58009281 from "../assets/free-icon-next-5800928.png";
-import "./SignUp.css";
-import { authAPI } from '../services/api';
+import React, { useState } from 'react';
+import './SignUp.css';
+import letSignUp from '../assets/SignUp4.png';
 
-const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+
+function SignUp({ onClose }) {
+  const [email, setEmail] = useState('');
+  const [emailValid, setEmailValid] = useState(null); // null: 미확인, true: 사용가능, false: 중복
+  const [emailCheckMsg, setEmailCheckMsg] = useState('');
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [pwMatch, setPwMatch] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
 
+  // 이메일 중복 검사
+  const checkEmail = async () => {
+    if (!email) return;
+    setEmailValid(null);
+    setEmailCheckMsg('');
+    try {
+      setLoading(true);
+      const res = await fetch(`http://localhost:8000/auth/check-email?email=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      if (res.ok && data.available) {
+        setEmailValid(true);
+        setEmailCheckMsg('사용 가능한 이메일입니다.');
+      } else {
+        setEmailValid(false);
+        setEmailCheckMsg(data.detail || '이미 사용 중인 이메일입니다.');
+      }
+    } catch (e) {
+      setEmailValid(false);
+      setEmailCheckMsg('서버 오류');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 비밀번호 일치 검사
+  const handlePw2Change = (v) => {
+    setPassword2(v);
+    setPwMatch(password === v);
+  };
+
+  // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
-
-    console.log('📝 회원가입 시도:', email);
-
-    // 비밀번호 확인 검증
-    if (password !== passwordConfirm) {
+    setSuccess(false);
+    if (!emailValid) {
+      setError('이메일 중복 확인을 해주세요.');
+      return;
+    }
+    if (!pwMatch) {
       setError('비밀번호가 일치하지 않습니다.');
-      setLoading(false);
       return;
     }
-
-    // 비밀번호 길이 검증
-    if (password.length < 6) {
-      setError('비밀번호는 최소 6자 이상이어야 합니다.');
-      setLoading(false);
-      return;
-    }
-
+    setLoading(true);
     try {
-      const userData = { email, password };
-      await authAPI.signup(userData);
-      
-      console.log('회원가입 성공');
-      alert('회원가입이 완료되었습니다! 로그인해주세요.');
-      navigate('/signin');
-    } catch (error) {
-      console.error('회원가입 실패:', error);
-      setError(error.message || '회원가입에 실패했습니다.');
+      const res = await fetch('http://localhost:8000/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => {
+          onClose();
+        }, 1200);
+      } else {
+        setError(data.detail || '회원가입 실패');
+      }
+    } catch (e) {
+      setError('서버 오류');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="frame">
-      <div className="frame-wrapper">
-        <div className="free-icon-home-wrapper" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <img
-            className="free-icon-home"
-            alt="Free icon home"
-            src={freeIconHomeButton76061422}
-          />
-        </div>
-      </div>
-      <div className="body">
-        <div className="div">
-          <div className="div-2" style={{ cursor: 'pointer' }} onClick={() => navigate('/signin')}>
-            <img
-              className="free-icon-next"
-              alt="Free icon next"
-              src={freeIconNext58009281}
-            />
-            <div className="text-wrapper">로그인하기</div>
-          </div>
-          <div className="div-wrapper">
-            <div className="text-wrapper-2">회원가입</div>
-          </div>
-
-          {error && (
-            <div className="error-message" style={{
-              color: '#ff4444',
-              backgroundColor: '#ffe6e6',
-              padding: '10px',
-              borderRadius: '4px',
-              marginBottom: '15px',
-              textAlign: 'center',
-              fontSize: '14px'
-            }}>
-              {error}
-            </div>
-          )}
-
-          <form className="div-3" onSubmit={handleSubmit}>
-            <div className="div-4">
-              <div className="div-5">
-                <div className="text-wrapper-3">이메일</div>
+    <div className="signup-modal-backdrop">
+      <div className="signup-modal">
+        <button className="signup-close-btn" onClick={onClose}>&times;</button>
+        <div className="signup-modal-content">
+          {/* 왼쪽: 입력 폼 */}
+          <form className="signup-form" onSubmit={handleSubmit} autoComplete="off">
+            <p className="signup-form-title">회원가입</p>
+            <div className="signup-input-group">
+              <label htmlFor="signup-email">이메일</label>
+              <div className="signup-input-row">
                 <input
-                  className="div-6"
+                  id="signup-email"
                   type="email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={e => { setEmail(e.target.value); setEmailValid(null); setEmailCheckMsg(''); }}
+                  className={emailValid === false ? 'invalid' : ''}
+                  placeholder="E-mail Address"
                   required
-                  disabled={loading}
                 />
+                <button type="button" className="email-check-btn" onClick={checkEmail} disabled={loading || !email}>
+                  중복확인
+                </button>
               </div>
-              <div className="div-5">
-                <div className="text-wrapper-3">비밀번호</div>
-                <input
-                  className="div-6"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  disabled={loading}
-                />
-              </div>
-              <div className="div-5">
-                <div className="text-wrapper-3">비밀번호 확인</div>
-                <input
-                  className="div-6"
-                  type="password"
-                  value={passwordConfirm}
-                  onChange={e => setPasswordConfirm(e.target.value)}
-                  required
-                  disabled={loading}
-                />
-              </div>
+              {emailCheckMsg && <div className={`signup-msg ${emailValid ? 'valid' : 'invalid'}`}>{emailCheckMsg}</div>}
             </div>
-            <button className="div-wrapper-2" type="submit" disabled={loading}>
-              <div className="text-wrapper-4">
-                {loading ? '회원가입 중...' : '회원가입'}
-              </div>
-            </button>
+            <div className="signup-input-group">
+              <label htmlFor="signup-password">비밀번호</label>
+              <input
+                id="signup-password"
+                type="password"
+                value={password}
+                onChange={e => { setPassword(e.target.value); setPwMatch(e.target.value === password2); }}
+                placeholder="Password"
+                required
+              />
+            </div>
+            <div className="signup-input-group">
+              <label htmlFor="signup-password2">비밀번호 확인</label>
+              <input
+                id="signup-password2"
+                type="password"
+                value={password2}
+                onChange={e => handlePw2Change(e.target.value)}
+                placeholder="Password 확인"
+                required
+                className={pwMatch ? '' : 'invalid'}
+              />
+              {!pwMatch && <div className="signup-msg invalid">비밀번호가 일치하지 않습니다.</div>}
+            </div>
+            {error && <div className="signup-msg invalid">{error}</div>}
+            {success && <div className="signup-msg valid">회원가입 성공! 로그인 해주세요.</div>}
+            <button className="signup-btn" type="submit" disabled={loading}>회원가입</button>
           </form>
+          <div className="signup-illust">
+            <img src={letSignUp} className="signup-illust-img" alt="decoration" width="300" />
+          </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default SignUp; 
+export default SignUp;

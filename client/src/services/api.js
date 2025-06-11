@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 // 로컬 FastAPI 서버만 사용
 const API_BASE_URL = 'http://localhost:8000';
@@ -20,7 +19,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     console.log('📤 API 요청:', `${API_BASE_URL}${config.url}`, config.method?.toUpperCase());
-    const token = Cookies.get('access_token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       console.log('🔑 토큰 추가됨');
@@ -53,10 +52,10 @@ api.interceptors.response.use(
     }
     
     if (error.response?.status === 401) {
-      console.log('🔒 인증 만료 - 로그인 페이지로 이동');
-      Cookies.remove('access_token');
+      console.log('🔒 토큰 만료 또는 인증 실패 - 로그인 페이지로 이동');
+      localStorage.removeItem('access_token');
       window.location.href = '/signin';
-    }
+      }
     
     return Promise.reject(error);
   }
@@ -104,7 +103,7 @@ export const authAPI = {
   // 로그아웃
   logout: () => {
     console.log('👋 로그아웃');
-    Cookies.remove('access_token');
+    localStorage.removeItem('access_token');
     window.location.href = '/signin';
   },
 
@@ -121,7 +120,7 @@ export const authAPI = {
 
   // 로그인 상태 확인
   isAuthenticated: () => {
-    return !!Cookies.get('access_token');
+    return !!localStorage.getItem('access_token');
   },
 
   // 서버 상태 확인
