@@ -1,14 +1,8 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import SignUp from './SignUp';
 
-/**
- * 1) 로그인 폼에서 제출 시, FastAPI의 /auth/login 엔드포인트로 POST 요청을 보내고
- *    성공하면 { access_token, token_type }을 받아서 localStorage에 저장합니다.
- * 2) 이후 다른 API를 호출할 때는 Authorization 헤더에 localStorage 토큰을 붙여 보내게 됩니다.
- */
 
 function Login() {
   const [email, setEmail] = useState('');
