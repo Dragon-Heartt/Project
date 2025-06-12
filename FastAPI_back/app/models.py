@@ -22,5 +22,5 @@ class MapPin(Base):
     space_type = Column(Boolean, default=False)  # indoor, outdoor
     has_chair = Column(Boolean, default=False)
     has_shade = Column(Boolean, default=False)
-    description = Column(String, nullable=True)
+    description = Column(String(255), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
