@@ -1,22 +1,30 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models import MapPin
+import json
+from fastapi.responses import JSONResponse
+import os
 
 router = APIRouter()
 
 @router.get("/pins")
-def get_map_pins(db: Session = Depends(get_db)):
-    pins = db.query(MapPin).all()
-    return [
-        {
-            "id": pin.id,
-            "latitude": pin.latitude,
-            "longitude": pin.longitude,
-            "space_type": pin.space_type,
-            "has_chair": pin.has_chair,
-            "has_shade": pin.has_shade,
-            "description": pin.description,
-        }
-        for pin in pins
-    ]
+def get_map_pins():
+    pins_file = "app/data/pins.txt"
+    if not os.path.exists(pins_file):
+        return []
+
+    with open(pins_file, "r", encoding="utf-8") as f:
+        pins = []
+        for line in f:
+            try:
+                data = json.loads(line.strip())
+                pin_info = {
+                    "title": data.get("title"),
+                    "latitude": data.get("latitude"),
+                    "longitude": data.get("longitude"),
+                    "space_type": data.get("space_type"),
+                    "has_chair": data.get("has_chair"),
+                    "has_shade": data.get("has_shade")
+                }
+                pins.append(pin_info)
+            except json.JSONDecodeError:
+                continue
+    return JSONResponse(content=pins)

@@ -6,13 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routes import auth  # 상대 경로로 인증 관련 라우터 가져오기
 from .routes import smokingZone 
 from .routes import map
-from app.database import engine, Base
+from .routes import pinCancel
 from fastapi.security import OAuth2PasswordBearer
-
-# ========== DB 테이블 생성 ==========  
-# 실행 시점에 models.py에 정의된 테이블을 모두 생성해 준다.
-# (만약 테이블이 이미 있으면 무시 ⇒ 기존 데이터 유지)
-Base.metadata.create_all(bind=engine)
 
 # ========== FastAPI 앱 인스턴스 생성 ==========
 app = FastAPI(title="Dragon-Heart FastAPI Backend")
@@ -35,6 +30,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 app.include_router(auth.router, prefix="/auth")
 app.include_router(smokingZone.router, prefix="/smokingZone")
 app.include_router(map.router, prefix="/map")
+app.include_router(pinCancel.router, prefix="/pinCancel")
 # (나중에 MapPin, 기타 기능 라우터가 있으면 아래처럼 추가)
 # from .routes import maps
 # app.include_router(maps.router)

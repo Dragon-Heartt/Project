@@ -3,6 +3,8 @@ import x651 from '../assets/65-1.png';
 import NLoca from '../assets/NowLocation.png';
 import './GoogleMap.css';
 import { createRoot } from 'react-dom/client';
+import { RiMapPin2Fill } from "react-icons/ri";
+import ReactDOMServer from "react-dom/server";
 
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
 
@@ -50,9 +52,9 @@ function loadGoogleMapsScript(callback) {
 
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
 
-const InfoWindowContent = ({ name, inside, has_chair, has_shade, onNavigate, onClose }) => (
+const InfoWindowContent = ({ title, inside, has_chair, has_shade, onNavigate, onClose }) => (
 	<div className="info-window-content">
-		<div className="place-title">{name}</div>
+		<div className="place-title">{title}</div>
 		<div className="place-type">
 			{inside ? '실내' : '실외'} / {has_chair ? '의자 있음' : '의자 없음'} / {has_shade ? '차양막 있음' : '차양막 없음'}
 		</div>
@@ -62,6 +64,13 @@ const InfoWindowContent = ({ name, inside, has_chair, has_shade, onNavigate, onC
 		</div>
 	</div>
 );
+
+const svgString = (color, stroke = '#222') =>
+	encodeURIComponent(
+		ReactDOMServer.renderToString(
+			<RiMapPin2Fill color={color} size={36} style={{ stroke: stroke, strokeWidth: 1 }} />
+		)
+	);
 
 const GoogleMap = () => {
 	const mapRef = useRef(null);
@@ -150,12 +159,9 @@ const GoogleMap = () => {
 				position: { lat: zone.latitude, lng: zone.longitude },
 				map: mapInstance.current,
 				icon: {
-					path: window.google.maps.SymbolPath.CIRCLE,
-					scale: 10,
-					fillColor: color,
-					fillOpacity: 1,
-					strokeWeight: 1,
-					strokeColor: '#333',
+					url: `data:image/svg+xml;charset=UTF-8,${svgString(color)}`,
+					scaledSize: new window.google.maps.Size(36, 36),
+					anchor: new window.google.maps.Point(18, 36),
 				},
 			});
 			const infoWindow = new window.google.maps.InfoWindow({
@@ -171,7 +177,7 @@ const GoogleMap = () => {
 			const root = createRoot(infoContent);
 			root.render(
 				<InfoWindowContent
-					name={zone.name || '장소명'}
+					title={zone.title}
 					inside={zone.inside}
 					has_chair={zone.chair}
 					has_shade={zone.shade}
@@ -179,8 +185,19 @@ const GoogleMap = () => {
 					onClose={handleClose}
 				/>
 			);
+
+			let isOpen = false;
 			marker.addListener('click', () => {
-				infoWindow.open({ anchor: marker, map: mapInstance.current });
+				if (isOpen) {
+					infoWindow.close();
+					isOpen = false;
+				} else {
+					infoWindow.open({ anchor: marker, map: mapInstance.current });
+					isOpen = true;
+					window.google.maps.event.addListenerOnce(infoWindow, 'closeclick', () => {
+						isOpen = false;
+					});
+				}
 			});
 			return marker;
 		});
@@ -254,7 +271,6 @@ const GoogleMap = () => {
 		}
 	};
 
-	// pulse overlay 렌더링
 	useEffect(() => {
 		if (!pulsePos || !mapInstance.current) return;
 		const overlay = new window.google.maps.OverlayView();
