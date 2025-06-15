@@ -118,7 +118,7 @@ const MarkerLegend = () => (
 	</div>
 );
 
-const GoogleMap = () => {
+const GoogleMap = ({ filters }) => {
 	const navigate = useNavigate();
 	const mapRef = useRef(null);
 	const mapInstance = useRef(null);
@@ -197,10 +197,19 @@ const GoogleMap = () => {
 		return () => window.google.maps.event.removeListener(listener);
 	}, [mapLoaded]);
 
+	const filteredZones = filters && (filters.spaceType !== null || filters.hasChair !== null || filters.hasShade !== null)
+		? smokingZones.filter(zone => {
+			if (filters.spaceType !== null && zone.space_type !== filters.spaceType) return false;
+			if (filters.hasChair !== null && zone.has_chair !== filters.hasChair) return false;
+			if (filters.hasShade !== null && zone.has_shade !== filters.hasShade) return false;
+			return true;
+		})
+		: smokingZones;
+
 	useEffect(() => {
 		if (!mapInstance.current) return;
 		zoneMarkers.forEach((m) => m.setMap(null));
-		const newMarkers = smokingZones.map((zone) => {
+		const newMarkers = filteredZones.map((zone) => {
 			const color = getMarkerColor(zone);
 			const marker = new window.google.maps.Marker({
 				position: { lat: zone.latitude, lng: zone.longitude },
@@ -234,9 +243,9 @@ const GoogleMap = () => {
 			root.render(
 				<InfoWindowContent
 					title={zone.title}
-					inside={zone.inside}
-					has_chair={zone.chair}
-					has_shade={zone.shade}
+					inside={zone.space_type}
+					has_chair={zone.has_chair}
+					has_shade={zone.has_shade}
 					onNavigate={handleNavigate}
 					onClose={handleClose}
 					photo_url={zone.photo_url}
@@ -259,7 +268,7 @@ const GoogleMap = () => {
 			return marker;
 		});
 		setZoneMarkers(newMarkers);
-	}, [smokingZones, navigate]);
+	}, [filteredZones, navigate]);
 
 	const handleCurrentLocation = () => {
 		if (!window.google || !window.google.maps || !mapInstance.current) {

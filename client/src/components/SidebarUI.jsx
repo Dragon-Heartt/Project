@@ -9,7 +9,7 @@ import { FiLogIn } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
 import { IoInformationCircleOutline } from "react-icons/io5";
 
-function SidebarUI() {
+function SidebarUI({ onFilterChange }) {
 	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [user, setUser] = useState(null);
@@ -62,9 +62,7 @@ function SidebarUI() {
 	};
 
 	const handleApplyFilters = () => {
-		console.log('적용된 필터:', filters);
-		alert(`필터 적용됨:\n실내/외부: ${filters.spaceType || '전체'}\n의자: ${filters.hasChair === null ? '전체' : filters.hasChair ? '있음' : '없음'}\n차양막: ${filters.hasShade === null ? '전체' : filters.hasShade ? '있음' : '없음'}`);
-		
+		if (onFilterChange) onFilterChange(filters);
 		setShowCategoryBar(false);
 		setIsExpanded(false);
 	};
@@ -187,14 +185,14 @@ function SidebarUI() {
 							<label>공간 유형</label>
 							<div className="filter-options">
 								<button 
-									className={`filter-btn ${filters.spaceType === 'indoor' ? 'selected' : ''}`}
-									onClick={() => handleFilterChange('spaceType', 'indoor')}
+									className={`filter-btn ${filters.spaceType === true ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('spaceType', true)}
 								>
 									실내
 								</button>
 								<button 
-									className={`filter-btn ${filters.spaceType === 'outdoor' ? 'selected' : ''}`}
-									onClick={() => handleFilterChange('spaceType', 'outdoor')}
+									className={`filter-btn ${filters.spaceType === false ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('spaceType', false)}
 								>
 									외부
 								</button>

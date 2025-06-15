@@ -142,13 +142,13 @@ const ApplicationManagement = () => {
                     ) : applications.length === 0 ? (
                         <div>신청 내역이 없습니다.</div>
                     ) : (
-                        applications.map((app, idx) => (
-                            <div key={idx} className="application-card">
+                        applications.map((app) => (
+                            <div key={app.fileIndex} className="application-card">
                                 <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
                                 <div>상태: {app.approved ? '승인됨' : '대기중'}</div>
                                 {!app.approved && (
-                                    <button onClick={() => handleApprove(idx)}>수락</button>
+                                    <button onClick={() => handleApprove(app.fileIndex)}>수락</button>
                                 )}
                             </div>
                         ))
