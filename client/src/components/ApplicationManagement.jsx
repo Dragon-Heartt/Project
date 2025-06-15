@@ -48,7 +48,7 @@ const ApplicationManagement = () => {
     const handleApprove = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/approve/${index}`, { method: 'PUT' });
-            if (!response.ok) throw new Error('승인에 실패했습니다.');
+            if (!response.ok) throw new Error('수락에 실패했습니다.');
             fetchApplications();
         } catch (e) {
             alert(e.message);
@@ -59,7 +59,7 @@ const ApplicationManagement = () => {
     const handleCancelApprove = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/cancel-approve/${index}`, { method: 'PUT' });
-            if (!response.ok) throw new Error('취소 승인에 실패했습니다.');
+            if (!response.ok) throw new Error('취소 수락에 실패했습니다.');
             fetchCancelApplications();
             fetchApplications(); // 핀 목록도 갱신
         } catch (e) {
@@ -71,7 +71,7 @@ const ApplicationManagement = () => {
     const handleCancelReject = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/cancel-reject/${index}`, { method: 'PUT' });
-            if (!response.ok) throw new Error('취소 거절에 실패했습니다.');
+            if (!response.ok) throw new Error('취소 반려에 실패했습니다.');
             fetchCancelApplications();
         } catch (e) {
             alert(e.message);
@@ -117,18 +117,15 @@ const ApplicationManagement = () => {
                 </button>
             </div>
 
-            {/* 신청 목록 */}
             {tab === 'apply' && (
                 <div>
-                    {loading ? (
-                        <div>로딩 중...</div>
-                    ) : applyError ? (
+                    {applyError ? (
                         <div className="error-message">{applyError}</div>
                     ) : applications.length === 0 ? (
                         <div>신청 내역이 없습니다.</div>
                     ) : (
-                        applications.map((app, idx) => (
-                            <div key={idx} className="application-card">
+                        applications.map((app) => (
+                            <div key={app.fileIndex} className="application-card">
                                 {app.photo_url && (
                                     <div className="application-image-wrap">
                                         <img src={`http://localhost:8000${app.photo_url}`} alt={app.title} className="application-image" />
@@ -136,11 +133,11 @@ const ApplicationManagement = () => {
                                 )}
                                 <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
-                                <div>상태: {app.approved ? '승인됨' : '대기중'}</div>
+                                <div>상태: {app.approved ? '수락됨' : '대기중'}</div>
                                 {!app.approved && (
                                     <div className="button-group">
-                                        <button className="approve-button" onClick={() => handleApprove(idx)}>수락</button>
-                                        <button className="reject-button" onClick={() => handleReject(idx)}>반려</button>
+                                        <button className="approve-button" onClick={() => handleApprove(app.fileIndex)}>수락</button>
+                                        <button className="reject-button" onClick={() => handleReject(app.fileIndex)}>반려</button>
                                     </div>
                                 )}
                             </div>
@@ -157,8 +154,8 @@ const ApplicationManagement = () => {
                     ) : cancelApplications.length === 0 ? (
                         <div>취소 신청 내역이 없습니다.</div>
                     ) : (
-                        cancelApplications.map((app, idx) => (
-                            <div key={idx} className="application-card">
+                        cancelApplications.map((app) => (
+                            <div key={app.fileIndex} className="application-card">
                                 {app.photo_url && (
                                     <div className="application-image-wrap">
                                         <img src={`http://localhost:8000${app.photo_url}`} alt={app.title} className="application-image" />
@@ -167,8 +164,8 @@ const ApplicationManagement = () => {
                                 <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
                                 <div className="button-group">
-                                    <button className="approve-button" onClick={() => handleApprove(idx)}>수락</button>
-                                    <button className="reject-button" onClick={() => handleReject(idx)}>반려</button>
+                                    <button className="approve-button" onClick={() => handleCancelApprove(app.fileIndex)}>수락</button>
+                                    <button className="reject-button" onClick={() => handleCancelReject(app.fileIndex)}>반려</button>
                                 </div>
                             </div>
                         ))

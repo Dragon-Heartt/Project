@@ -1,5 +1,8 @@
 .application-management {
-    padding: 20px;
+    padding: 32px 0 0 0;
+    /* overflow-y: auto; */
+    /* min-height: 100vh; */
+    box-sizing: border-box;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -21,11 +24,13 @@
     margin-bottom: 16px;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* height: 300px; */
 }
 
 .application-image {
     width: 100%;
+    /* height: 100%; */
     object-fit: cover;
     transition: transform 0.2s;
 }

@@ -35,14 +35,13 @@ def get_cancel_requests():
         return []
     results = []
     with open(cancel_file, "r", encoding="utf-8") as f:
-        for line in f:
+        for file_index, line in enumerate(f):
             if not line.strip():
                 continue
             item = json.loads(line.strip())
-            # extract filename from filesystem path
             filename = os.path.basename(item.get("photo_url", "")) or item.get("filename", "")
-            # rewrite to public URL under the static mount
             item["photo_url"] = f"/cancel_uploads/{filename}"
+            item["fileIndex"] = file_index
             results.append(item)
     return results
 
