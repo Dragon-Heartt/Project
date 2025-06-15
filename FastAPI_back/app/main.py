@@ -7,6 +7,7 @@ from .routes import auth
 from .routes import smokingZone 
 from .routes import map
 from .routes import pinCancel
+from .routes import admin
 from fastapi.security import OAuth2PasswordBearer
 
 app = FastAPI(title="Dragon-Heart FastAPI Backend")
@@ -28,6 +29,7 @@ app.include_router(auth.router, prefix="/auth")
 app.include_router(smokingZone.router, prefix="/smokingZone")
 app.include_router(map.router, prefix="/map")
 app.include_router(pinCancel.router, prefix="/pinCancel")
+app.include_router(admin.router, prefix="/admin")
 
 @app.get("/")
 def read_root():

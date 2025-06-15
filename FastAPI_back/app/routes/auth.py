@@ -37,7 +37,7 @@ USER_FILE = os.path.join(os.path.dirname(__file__), "../data/user.txt")
 def save_user_to_txt(email: str, hashed_password: str):
     with open(USER_FILE, "a") as f:
         created_at = datetime.utcnow().isoformat()
-        f.write(f"{email},{hashed_password},{created_at}\n")
+        f.write(f"{email},{hashed_password},{created_at},false\n")
 
 def check_email_exists(email: str):
     try:
@@ -103,10 +103,22 @@ def signup(request: schemas.UserCreate):
 
 @router.post("/login")
 def login(request: schemas.UserLogin):
-    if not authenticate_user(request.email, request.password):
-        raise HTTPException(status_code=401, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
-    access_token = create_access_token(data={"sub": request.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    try:
+        with open(USER_FILE, "r") as f:
+            for line in f:
+                saved_email, saved_hashed_pw, _, is_admin = line.strip().split(",")
+                if saved_email == request.email and verify_password(request.password, saved_hashed_pw):
+                    access_token = create_access_token(data={"sub": saved_email})
+                    return {
+                        "access_token": access_token,
+                        "token_type": "bearer",
+                        "email": saved_email,
+                        "is_admin": is_admin.lower() == "true"
+                    }
+    except FileNotFoundError:
+        pass
+
+    raise HTTPException(status_code=401, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):

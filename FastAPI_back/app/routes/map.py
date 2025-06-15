@@ -16,6 +16,8 @@ def get_map_pins():
         for line in f:
             try:
                 data = json.loads(line.strip())
+                if not data.get("approved"):
+                    continue
                 filename = os.path.basename(data["photo_url"])
                 pin_info = {
                     "title": data.get("title"),
@@ -30,3 +32,20 @@ def get_map_pins():
             except json.JSONDecodeError:
                 continue
     return JSONResponse(content=pins)
+
+@router.get("/pins/pending")
+def get_pending_pins():
+    pins_file = "app/data/pins.txt"
+    if not os.path.exists(pins_file):
+        return []
+
+    pending = []
+    with open(pins_file, "r", encoding="utf-8") as f:
+        for line in f:
+            try:
+                data = json.loads(line.strip())
+                if str(data.get("approved")).lower() == "false":
+                    pending.append(data)
+            except json.JSONDecodeError:
+                continue
+    return JSONResponse(content=pending)

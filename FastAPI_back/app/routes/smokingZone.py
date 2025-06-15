@@ -37,7 +37,8 @@ async def apply_location(
         "has_shade": has_shade,
         "description": description,
         "photo_url": photo_url,
-        "created_at": datetime.utcnow().isoformat()
+        "created_at": datetime.utcnow().isoformat(),
+        "approved": False
     }
 
     with open("app/data/pins.txt", "a", encoding="utf-8") as f:

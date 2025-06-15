@@ -16,7 +16,6 @@ function Login() {
     setLoading(true);
 
     try {
-      // ➡ 실제 FastAPI 서버의 로그인 엔드포인트 URL로 변경하세요.
       const response = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,16 +25,13 @@ function Login() {
       const data = await response.json();
 
       if (response.ok && data.access_token) {
-        // 1) 로컬 스토리지에 토큰 저장 (Bearer 헤더용)
         localStorage.setItem('access_token', data.access_token);
-        // 2) (선택) 로그인한 사용자의 이메일을 로컬 스토리지에 저장해둬도 됩니다
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('isAdmin', data.is_admin);  
 
         alert('로그인 성공!');
-        // 3) 로그인 후 메인 페이지(또는 원하는 페이지)로 이동
         navigate('/main');
       } else {
-        // 4xx/5xx 에러 메시지가 data.detail에 담겨 있으면 보여주고, 아니면 일반 오류
         alert(data.detail || '로그인에 실패했습니다.');
       }
     } catch (err) {
@@ -97,7 +93,6 @@ function Login() {
   			</path>
     	</svg>
 	</div>
-      	{/* 오른쪽 로그인 폼 */}
       	<div className="login-form-bg">
         	<form className="login-form" onSubmit={handleLogin} autoComplete="off">
           	<div className="login-form-title">
@@ -110,10 +105,8 @@ function Login() {
           </div>
 
           <div className="login-input-group">
-            {/* 이메일 입력 */}
             <div className="login-input-wrap">
               <span className="login-input-icon">
-                {/* 이메일 아이콘 */}
                 <svg width="20" height="20" fill="#8ec6f7" viewBox="0 0 20 20">
                   <path d="M2 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v.217l6 4.5 6-4.5V4H4zm12 2.383l-5.445 4.084a1 1 0 0 1-1.11 0L4 6.383V16h12V6.383z" />
                 </svg>
@@ -129,10 +122,8 @@ function Login() {
               />
             </div>
 
-            {/* 비밀번호 입력 */}
             <div className="login-input-wrap">
               <span className="login-input-icon">
-                {/* 비밀번호 아이콘 */}
                 <svg width="20" height="20" fill="#8ec6f7" viewBox="0 0 20 20">
                   <path d="M10 2a4 4 0 0 1 4 4v2h1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h1V6a4 4 0 0 1 4-4zm2 6V6a2 2 0 1 0-4 0v2h4zm-6 2v6h8v-6H6z" />
                 </svg>

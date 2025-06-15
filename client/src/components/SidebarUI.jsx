@@ -13,6 +13,7 @@ function SidebarUI() {
 	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [user, setUser] = useState(null);
+	const [isAdmin, setIsAdmin] = useState(false);
 	const [showCategoryBar, setShowCategoryBar] = useState(false);
 	const [showMarkerInfo, setShowMarkerInfo] = useState(false);
 	
@@ -26,19 +27,26 @@ function SidebarUI() {
 		const token = localStorage.getItem('access_token');
 		if (token) {
 			const userEmail = localStorage.getItem('userEmail');
+			const adminStatus = localStorage.getItem('isAdmin') === 'true';
 			if (userEmail) {
 				setUser({ email: userEmail });
+				setIsAdmin(adminStatus);
 			} else {
 				setUser(null);
+				setIsAdmin(false);
 			}
 		} else {
 			setUser(null);
+			setIsAdmin(false);
 		}
 	}, []);
+
 	const handleLogout = () => {
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('userEmail');
+		localStorage.removeItem('isAdmin');
 		setUser(null);
+		setIsAdmin(false);
 		navigate('/signin');
 	};
 
@@ -79,7 +87,14 @@ function SidebarUI() {
 		navigate('/Application');
 	};
 
-	const menuItems = [
+	const menuItems = isAdmin ? [
+		{
+			id: 'application-list',
+			label: '신청 목록',
+			onClick: () => navigate('/applicationManagement'),
+			icon: <BiCheckSquare />
+		}
+	] : [
 		{ 
 			id: 'category',
 			label: '흡연구역 카테고리 선택',
@@ -272,6 +287,21 @@ function SidebarUI() {
 							<div className="marker-color brown"></div>
 							<span>실외 + 의자 + 차양막</span>
 						</div>
+					</div>
+				</div>
+			)}
+
+			{isAdmin && (
+				<div className="sidebar-section">
+					<h3>관리자 메뉴</h3>
+					<div className="sidebar-menu">
+						<button
+							className="sidebar-button"
+							onClick={() => navigate('/applicationManagement')}
+						>
+							<span className="button-icon">📋</span>
+							신청 목록
+						</button>
 					</div>
 				</div>
 			)}
