@@ -222,7 +222,13 @@ const GoogleMap = () => {
 			};
 			const handleClose = () => {
 				infoWindow.close();
-				navigate('/cancelApplication');
+				navigate('/cancelApplication', {
+					state: {
+						lat: zone.latitude,
+						lng: zone.longitude,
+						zoneName: zone.title
+					}
+				});
 			};
 			const root = createRoot(infoContent);
 			root.render(

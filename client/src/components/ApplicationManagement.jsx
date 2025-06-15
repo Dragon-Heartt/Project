@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ApplicationManagement.css';
 
 const ApplicationManagement = () => {
+    const navigate = useNavigate();
     const [tab, setTab] = useState('apply'); // 'apply' or 'cancel'
     const [applications, setApplications] = useState([]);
     const [cancelApplications, setCancelApplications] = useState([]);
@@ -79,6 +81,27 @@ const ApplicationManagement = () => {
 
     return (
         <div className="application-management">
+            {/* 홈(메인)으로 돌아가기 버튼 */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                <button
+                    onClick={() => navigate('/main')}
+                    style={{
+                        marginRight: 16,
+                        background: 'none',
+                        border: 'none',
+                        fontSize: 20,
+                        cursor: 'pointer',
+                        color: '#1976d2',
+                        fontWeight: 'bold',
+                        padding: 0
+                    }}
+                    aria-label="메인으로 돌아가기"
+                >
+                    ⬅ 홈
+                </button>
+                <div style={{ flex: 1 }} />
+            </div>
+
             {/* 상단 탭 */}
             <div style={{ display: 'flex', borderBottom: '1px solid #ccc', marginBottom: 20 }}>
                 <button
@@ -121,8 +144,7 @@ const ApplicationManagement = () => {
                     ) : (
                         applications.map((app, idx) => (
                             <div key={idx} className="application-card">
-                                <div>제목: {app.title || app.name || '-'}</div>
-                                <div>신청자: {app.user_id || '-'}</div>
+                                <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
                                 <div>상태: {app.approved ? '승인됨' : '대기중'}</div>
                                 {!app.approved && (
@@ -144,8 +166,7 @@ const ApplicationManagement = () => {
                     ) : (
                         cancelApplications.map((app, idx) => (
                             <div key={idx} className="application-card">
-                                <div>제목: {app.title || app.name || '-'}</div>
-                                <div>신청자: {app.user_id || '-'}</div>
+                                <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
                                 <button onClick={() => handleCancelApprove(idx)}>취소 승인</button>
                                 <button onClick={() => handleCancelReject(idx)}>취소 거절</button>

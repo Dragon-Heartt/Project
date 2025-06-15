@@ -26,7 +26,7 @@ const SHADE_TYPES = [
 
 function Application({ onClose }) {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0); // 0: 위치, 1: 사진, 2: 공간유형, 3: 이름
+  const [step, setStep] = useState(0); 
   const [address, setAddress] = useState('');
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
@@ -45,7 +45,6 @@ function Application({ onClose }) {
   const mapRef = useRef(null);
   const markerRef = useRef(null);
 
-  // 지도 모달 열기
   const openMapModal = () => {
     setShowMapModal(true);
     setTimeout(() => {
@@ -61,12 +60,10 @@ function Application({ onClose }) {
     }, 100);
   };
 
-  // 지도 모달 닫기
   const closeMapModal = () => {
     setShowMapModal(false);
   };
 
-  // 지도 모달 내 지도 초기화
   const initMapModal = () => {
     if (!mapRef.current) return;
     const map = new window.google.maps.Map(mapRef.current, {
@@ -82,7 +79,6 @@ function Application({ onClose }) {
       setTempLat(e.latLng.lat());
       setTempLng(e.latLng.lng());
       markerRef.current.setPosition(e.latLng);
-      // 역지오코딩
       const addr = await getAddressFromLatLng(e.latLng.lat(), e.latLng.lng());
       setTempAddress(addr);
     });
@@ -92,11 +88,9 @@ function Application({ onClose }) {
       const addr = await getAddressFromLatLng(e.latLng.lat(), e.latLng.lng());
       setTempAddress(addr);
     });
-    // 최초 역지오코딩
     getAddressFromLatLng(tempLat, tempLng).then(setTempAddress);
   };
 
-  // 위도/경도로 주소 얻기
   const getAddressFromLatLng = async (lat, lng) => {
     try {
       const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q`);
@@ -110,7 +104,6 @@ function Application({ onClose }) {
     }
   };
 
-  // 지도 모달에서 위치 선택 후 적용
   const handleSelectLocation = () => {
     setLat(tempLat);
     setLng(tempLng);
@@ -118,7 +111,6 @@ function Application({ onClose }) {
     setShowMapModal(false);
   };
 
-  // 내 위치로 이동 (지도 모달 내에서만)
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
       setError('브라우저가 위치 정보를 지원하지 않습니다.');
@@ -264,7 +256,7 @@ function Application({ onClose }) {
                 </div>
               ))}
             </div>
-            <button className="application-next-btn" type="button" onClick={() => setStep(3)} disabled={!spaceType || hasChair === null || hasShade === null}>다음</button>
+            <button className="application-next-btn" type="button" onClick={() => setStep(3)} disabled={spaceType === null || hasChair === null || hasShade === null}>다음</button>
           </div>
         </>
       );

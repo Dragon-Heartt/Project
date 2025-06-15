@@ -64,7 +64,6 @@ def approve_cancel(index: int):
             if (
                 pin["latitude"] == cancel_pin["latitude"]
                 and pin["longitude"] == cancel_pin["longitude"]
-                and pin["user_id"] == cancel_pin["user_id"]
             ):
                 continue
             updated_pins.append(line)
