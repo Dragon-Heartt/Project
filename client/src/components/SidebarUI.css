@@ -26,7 +26,6 @@
   gap: 10px;
 }
 
-/* 프로필 섹션 */
 .profile-section {
   display: flex;
   align-items: center;
@@ -135,13 +134,11 @@
   margin: 10px 15px;
 }
 
-/* 호버 상태에서의 아이콘 애니메이션 */
 .menu-item:hover .menu-icon,
 .profile-section:hover .profile-icon {
   transform: scale(1.1);
 }
 
-/* 활성 상태 스타일 */
 .menu-item.active {
   background: #DAEFFF;
   transform: translateX(5px);

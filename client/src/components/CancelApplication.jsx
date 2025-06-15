@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 function CancelApplication(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  // state에서 우선 받고, 없으면 props fallback
+
   const lat = location.state?.lat ?? props.lat;
   const lng = location.state?.lng ?? props.lng;
   const zoneName = location.state?.zoneName ?? props.zoneName;
@@ -73,13 +73,11 @@ function CancelApplication(props) {
         <form className="cancel-application-form" onSubmit={handleSubmit} autoComplete="off">
           <h2 className="cancel-application-title">흡연구역 취소 신청</h2>
           <div className="cancel-application-info">
-            <div><b>장소명:</b> {zoneName}</div>
-            <div><b>위치:</b> {lat}, {lng}</div>
+            <div><b>장소 : </b> {zoneName}</div>
           </div>
           <input type="file" accept="image/*" onChange={handlePhotoChange} disabled={loading} />
           {photoPreview && <img src={photoPreview} alt="미리보기" className="cancel-application-photo-preview" />}
           <button className="cancel-application-btn" type="submit" disabled={loading || !photo}>취소 신청하기</button>
-          <button className="cancel-application-cancel-btn" type="button" onClick={onCancel} disabled={loading}>돌아가기</button>
           {error && <div className="cancel-application-msg error">{error}</div>}
         </form>
       </div>

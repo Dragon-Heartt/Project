@@ -13,6 +13,11 @@ import "./App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
+  const [filters, setFilters] = useState({
+    spaceType: null,
+    hasChair: null,
+    hasShade: null
+  });
 
   return (
     <Router>
@@ -29,8 +34,12 @@ function App() {
             path="/main"
             element={
               <div className="map-layout">
-                <SidebarUI isOpen={isOpen} onToggle={() => setIsOpen(prev => !prev)} />
-                <GoogleMap />
+                <SidebarUI
+                  isOpen={isOpen}
+                  onToggle={() => setIsOpen(prev => !prev)}
+                  onFilterChange={setFilters}
+                />
+                <GoogleMap filters={filters} />
               </div>
             }
           />

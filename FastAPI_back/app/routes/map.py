@@ -41,10 +41,11 @@ def get_pending_pins():
 
     pending = []
     with open(pins_file, "r", encoding="utf-8") as f:
-        for line in f:
+        for file_index, line in enumerate(f):
             try:
                 data = json.loads(line.strip())
                 if str(data.get("approved")).lower() == "false":
+                    data["fileIndex"] = file_index
                     pending.append(data)
             except json.JSONDecodeError:
                 continue
