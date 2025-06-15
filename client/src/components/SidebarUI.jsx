@@ -7,21 +7,21 @@ import { BiEdit } from "react-icons/bi";
 import { BiDownload } from "react-icons/bi";
 import { FiLogIn } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 function SidebarUI() {
 	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [user, setUser] = useState(null);
 	const [showCategoryBar, setShowCategoryBar] = useState(false);
+	const [showMarkerInfo, setShowMarkerInfo] = useState(false);
 	
-	// 카테고리 필터 상태
 	const [filters, setFilters] = useState({
-		spaceType: null, // 'indoor' | 'outdoor' | null
-		hasChair: null,  // true | false | null
-		hasShade: null   // true | false | null
+		spaceType: null,
+		hasChair: null,
+		hasShade: null
 	});
 
-	// 로그인 상태 확인
 	useEffect(() => {
 		const token = localStorage.getItem('access_token');
 		if (token) {
@@ -55,11 +55,8 @@ function SidebarUI() {
 
 	const handleApplyFilters = () => {
 		console.log('적용된 필터:', filters);
-		// 여기서 나중에 DB 쿼리나 API 호출을 할 예정
-		// 예: await fetchFilteredSmokingAreas(filters);
 		alert(`필터 적용됨:\n실내/외부: ${filters.spaceType || '전체'}\n의자: ${filters.hasChair === null ? '전체' : filters.hasChair ? '있음' : '없음'}\n차양막: ${filters.hasShade === null ? '전체' : filters.hasShade ? '있음' : '없음'}`);
 		
-		// 적용 후 사이드바와 카테고리 바 모두 닫기
 		setShowCategoryBar(false);
 		setIsExpanded(false);
 	};
@@ -94,6 +91,12 @@ function SidebarUI() {
 			label: '흡연구역 신청',
 			onClick: handleRegisterClick,
 			icon: <BiEdit />
+		},
+		{
+			id: 'marker-info',
+			label: '마커 색상 안내',
+			onClick: () => setShowMarkerInfo(!showMarkerInfo),
+			icon: <IoInformationCircleOutline />
 		}
 	];
 
@@ -115,14 +118,12 @@ function SidebarUI() {
 				className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}
 				onMouseEnter={() => setIsExpanded(true)}
 				onMouseLeave={() => {
-					// 카테고리 바가 열려있으면 사이드바를 닫지 않음
-					if (!showCategoryBar) {
+					if (!showCategoryBar && !showMarkerInfo) {
 						setIsExpanded(false);
 					}
 				}}
 			>
 				<div className="sidebar-content">
-					{/* 프로필 섹션 */}
 					<div className="profile-section" onClick={handleProfileClick}>
 						<div className="profile-icon">
 							<BiUser />
@@ -132,7 +133,6 @@ function SidebarUI() {
 						</div>
 					</div>
 
-					{/* 메뉴 아이템들 */}
 					{menuItems.map((item) => (
 						<div 
 							key={item.id}
@@ -148,7 +148,6 @@ function SidebarUI() {
 						</div>
 					))}
 
-					{/* 로그인/로그아웃 버튼 */}
 					{user 
 						? <div className="menu-item" onClick={handleLogout}>
 							<div className="menu-icon"><LuLogOut /></div>
@@ -162,7 +161,6 @@ function SidebarUI() {
 				</div>
 			</div>
 
-			{/* 카테고리 선택 바 */}
 			{showCategoryBar && (
 				<div className="category-bar">
 					<div className="category-header">
@@ -170,7 +168,6 @@ function SidebarUI() {
 					</div>
 					
 					<div className="category-content">
-						{/* 실내/외부 선택 */}
 						<div className="filter-group">
 							<label>공간 유형</label>
 							<div className="filter-options">
@@ -189,7 +186,6 @@ function SidebarUI() {
 							</div>
 						</div>
 
-						{/* 의자 유무 */}
 						<div className="filter-group">
 							<label>의자 유무</label>
 							<div className="filter-options">
@@ -208,7 +204,6 @@ function SidebarUI() {
 							</div>
 						</div>
 
-						{/* 차양막 유무 */}
 						<div className="filter-group">
 							<label>차양막 유무</label>
 							<div className="filter-options">
@@ -227,7 +222,6 @@ function SidebarUI() {
 							</div>
 						</div>
 
-						{/* 버튼들 */}
 						<div className="filter-actions">
 							<button className="reset-btn" onClick={handleResetFilters}>
 								초기화
@@ -235,6 +229,48 @@ function SidebarUI() {
 							<button className="apply-btn" onClick={handleApplyFilters}>
 								적용
 							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{showMarkerInfo && (
+				<div className="marker-info-popup">
+					<div className="marker-info-header">
+						<h3>마커 색상 안내</h3>
+					</div>
+					<div className="marker-info-content">
+						<div className="marker-info-item">
+							<div className="marker-color blue"></div>
+							<span>실내 + 의자 + 차양막</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color yellow"></div>
+							<span>실내 + 의자</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color green"></div>
+							<span>실내 + 차양막</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color red"></div>
+							<span>실내</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color purple"></div>
+							<span>실외</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color orange"></div>
+							<span>실외 + 차양막</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color pink"></div>
+							<span>실외 + 의자</span>
+						</div>
+						<div className="marker-info-item">
+							<div className="marker-color brown"></div>
+							<span>실외 + 의자 + 차양막</span>
 						</div>
 					</div>
 				</div>

@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 25vh;
+  height: 28vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
@@ -39,7 +39,7 @@
 }
 
 .profile-icon {
-  font-size: 28px;
+  font-size: 26px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
 }
 
 .menu-icon {
-  font-size: 38px;
+  font-size: 27px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -280,4 +280,62 @@
   background: #2980b9;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.marker-info-popup {
+  position: fixed;
+  top: 80px;
+  left: 80px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  z-index: 1000;
+  min-width: 280px;
+}
+
+.marker-info-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.marker-info-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.marker-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.marker-info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.marker-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.marker-color.blue { background-color: blue; }
+.marker-color.yellow { background-color: yellow; }
+.marker-color.green { background-color: green; }
+.marker-color.red { background-color: red; }
+.marker-color.purple { background-color: purple; }
+.marker-color.orange { background-color: orange; }
+.marker-color.pink { background-color: pink; }
+.marker-color.brown { background-color: brown; }
+
+.marker-info-item span {
+  font-size: 14px;
+  color: #666;
 }

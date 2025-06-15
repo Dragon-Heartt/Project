@@ -5,6 +5,7 @@ import './GoogleMap.css';
 import { createRoot } from 'react-dom/client';
 import { RiMapPin2Fill } from "react-icons/ri";
 import ReactDOMServer from "react-dom/server";
+import { useNavigate } from 'react-router-dom';
 
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
 
@@ -52,8 +53,13 @@ function loadGoogleMapsScript(callback) {
 
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
 
-const InfoWindowContent = ({ title, inside, has_chair, has_shade, onNavigate, onClose }) => (
+const InfoWindowContent = ({ title, inside, has_chair, has_shade, onNavigate, onClose, photo_url }) => (
 	<div className="info-window-content">
+		{photo_url && (
+			<div className="place-image">
+				<img src={`http://localhost:8000${photo_url}`} alt={title} />
+			</div>
+		)}
 		<div className="place-title">{title}</div>
 		<div className="place-type">
 			{inside ? '실내' : '실외'} / {has_chair ? '의자 있음' : '의자 없음'} / {has_shade ? '차양막 있음' : '차양막 없음'}
@@ -72,7 +78,48 @@ const svgString = (color, stroke = '#222') =>
 		)
 	);
 
+const MarkerLegend = () => (
+	<div className="marker-legend">
+		<h3>마커 색상 설명</h3>
+		<div className="legend-items">
+			<div className="legend-item">
+				<RiMapPin2Fill color="blue" size={24} />
+				<span>실내 + 의자 + 차양막</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="yellow" size={24} />
+				<span>실내 + 의자</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="green" size={24} />
+				<span>실내 + 차양막</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="red" size={24} />
+				<span>실내</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="purple" size={24} />
+				<span>실외</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="orange" size={24} />
+				<span>실외 + 차양막</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="pink" size={24} />
+				<span>실외 + 의자</span>
+			</div>
+			<div className="legend-item">
+				<RiMapPin2Fill color="brown" size={24} />
+				<span>실외 + 의자 + 차양막</span>
+			</div>
+		</div>
+	</div>
+);
+
 const GoogleMap = () => {
+	const navigate = useNavigate();
 	const mapRef = useRef(null);
 	const mapInstance = useRef(null);
 	const markerRef = useRef(null);
@@ -173,7 +220,10 @@ const GoogleMap = () => {
 			const handleNavigate = () => {
 				window.open(`https://map.naver.com/v5/directions/-/-/-/walk?c=15.00,0,0,0,dh`, '_blank');
 			};
-			const handleClose = () => infoWindow.close();
+			const handleClose = () => {
+				infoWindow.close();
+				navigate('/cancelApplication');
+			};
 			const root = createRoot(infoContent);
 			root.render(
 				<InfoWindowContent
@@ -183,6 +233,7 @@ const GoogleMap = () => {
 					has_shade={zone.shade}
 					onNavigate={handleNavigate}
 					onClose={handleClose}
+					photo_url={zone.photo_url}
 				/>
 			);
 
@@ -202,7 +253,7 @@ const GoogleMap = () => {
 			return marker;
 		});
 		setZoneMarkers(newMarkers);
-	}, [smokingZones]);
+	}, [smokingZones, navigate]);
 
 	const handleCurrentLocation = () => {
 		if (!window.google || !window.google.maps || !mapInstance.current) {
@@ -329,6 +380,7 @@ const GoogleMap = () => {
 			>
 				<img src={x651} alt="현재 위치 아이콘" className="element" />
 			</button>
+			<MarkerLegend />
 		</div>
 	);
 };

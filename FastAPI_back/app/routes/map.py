@@ -16,13 +16,15 @@ def get_map_pins():
         for line in f:
             try:
                 data = json.loads(line.strip())
+                filename = os.path.basename(data["photo_url"])
                 pin_info = {
                     "title": data.get("title"),
                     "latitude": data.get("latitude"),
                     "longitude": data.get("longitude"),
                     "space_type": data.get("space_type"),
                     "has_chair": data.get("has_chair"),
-                    "has_shade": data.get("has_shade")
+                    "has_shade": data.get("has_shade"),
+                    "photo_url": f"/uploads/{filename}"
                 }
                 pins.append(pin_info)
             except json.JSONDecodeError:
