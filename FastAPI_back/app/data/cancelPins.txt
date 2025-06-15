@@ -1,0 +1,1 @@
+{"title": "도서관 흡연장", "latitude": 36.628186690039925, "longitude": 127.45683817876784, "photo_url": "/Users/jihyun/Desktop/3학년 1학기/WebSoftware/dragon-heart/FastAPI_back/app/data/cancel_uploads/cancel_20250615181620_KakaoTalk_Photo_2025-06-09-00-31-07.png", "created_at": "2025-06-15T18:16:20.071318"}

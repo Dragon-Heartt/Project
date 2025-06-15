@@ -104,12 +104,6 @@ function SidebarUI({ onFilterChange }) {
 			label: '흡연구역 신청',
 			onClick: handleRegisterClick,
 			icon: <BiEdit />
-		},
-		{
-			id: 'marker-info',
-			label: '마커 색상 안내',
-			onClick: () => setShowMarkerInfo(!showMarkerInfo),
-			icon: <IoInformationCircleOutline />
 		}
 	];
 
@@ -128,7 +122,7 @@ function SidebarUI({ onFilterChange }) {
 	return (
 		<>
 			<div 
-				className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}
+				className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}${isAdmin ? ' admin-sidebar' : ''}`}
 				onMouseEnter={() => setIsExpanded(true)}
 				onMouseLeave={() => {
 					if (!showCategoryBar && !showMarkerInfo) {

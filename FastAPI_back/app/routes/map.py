@@ -46,6 +46,9 @@ def get_pending_pins():
                 data = json.loads(line.strip())
                 if str(data.get("approved")).lower() == "false":
                     data["fileIndex"] = file_index
+                    if data.get("photo_url"):
+                        filename = os.path.basename(data["photo_url"])
+                        data["photo_url"] = f"/uploads/{filename}"
                     pending.append(data)
             except json.JSONDecodeError:
                 continue

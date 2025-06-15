@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 28vh;
+  height: 25vh;
   background: #FFF;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
@@ -334,4 +334,9 @@
 .marker-info-item span {
   font-size: 14px;
   color: #666;
+}
+
+.admin-sidebar {
+  background: #ffffff;
+  height: 20.2%;
 }
