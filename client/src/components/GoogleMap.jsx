@@ -227,7 +227,10 @@ const GoogleMap = ({ filters }) => {
 			const infoContent = document.createElement('div');
 			infoWindow.setContent(infoContent);
 			const handleNavigate = () => {
-				window.open(`https://map.naver.com/v5/directions/-/-/-/walk?c=15.00,0,0,0,dh`, '_blank');
+				const destLat = zone.latitude;
+				const destLng = zone.longitude;
+				const kakaoUrl = `https://map.kakao.com/link/to/선택한_흡연구역,${destLat},${destLng}`;
+				window.open(kakaoUrl, '_blank');
 			};
 			const handleClose = () => {
 				infoWindow.close();
