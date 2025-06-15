@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import SignUp from './SignUp';
+import { FaUserAstronaut } from "react-icons/fa6";
+import { IoKeyOutline, IoMailOutline } from "react-icons/io5";
 
 
 function Login() {
@@ -44,16 +46,12 @@ function Login() {
 
   return (
     <div className="login-root">
-      {/* 왼쪽 그라데이션 + 웨이브 */}
       <div className="login-wave-bg color-change-2x">
         <div className="login-wave-content">
-          <div className="login-profile-icon">
-            {/* 임시 프로필 아이콘 */}
-          </div>
-          <h2>Smoking 후루룹짭짭 니코틴이 너무 조아</h2>
-          <p>
-		  니코틴은 일시적으로 도파민을 분비시켜 기분을 좋게 만들어주고, 니코틴은 식욕을 억제하는 효과가 있어서 일부 사람은 체중 조절에 도움이 된다. 니코틴은 아세틸콜린 수용체에 작용해서 단기적으로 각성 상태를 높여주는 효과가 있다.
-          </p>
+          <h2>내 주변 흡연구역을 한눈에!</h2>
+          <h3>로그인하고 시작하세요</h3>
+          <p>국민건강증진법 제9조에 따라 학교·의료기관·관공서·대중교통 등 공공장소는 모두 금연구역입니다.</p>
+          <p>위반 시 흡연자에게 10만원 이하 과태료가 부과됩니다.</p>
         </div>
     </div>
 	<div >
@@ -96,20 +94,15 @@ function Login() {
       	<div className="login-form-bg">
         	<form className="login-form" onSubmit={handleLogin} autoComplete="off">
           	<div className="login-form-title">
-            <span className="login-form-avatar">
-              <svg width="48" height="48" viewBox="0 0 60 60" fill="none">
-                <circle cx="30" cy="22" r="12" fill="#8ec6f7" />
-                <ellipse cx="30" cy="45" rx="18" ry="10" fill="#8ec6f7" fillOpacity="0.5" />
-              </svg>
-            </span>
-          </div>
+              <div className="login-icon">
+                <FaUserAstronaut />
+              </div>
+            </div>
 
           <div className="login-input-group">
             <div className="login-input-wrap">
               <span className="login-input-icon">
-                <svg width="20" height="20" fill="#8ec6f7" viewBox="0 0 20 20">
-                  <path d="M2 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v.217l6 4.5 6-4.5V4H4zm12 2.383l-5.445 4.084a1 1 0 0 1-1.11 0L4 6.383V16h12V6.383z" />
-                </svg>
+                <IoMailOutline />
               </span>
               <input
                 type="email"
@@ -124,9 +117,7 @@ function Login() {
 
             <div className="login-input-wrap">
               <span className="login-input-icon">
-                <svg width="20" height="20" fill="#8ec6f7" viewBox="0 0 20 20">
-                  <path d="M10 2a4 4 0 0 1 4 4v2h1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h1V6a4 4 0 0 1 4-4zm2 6V6a2 2 0 1 0-4 0v2h4zm-6 2v6h8v-6H6z" />
-                </svg>
+                <IoKeyOutline />
               </span>
               <input
                 type="password"
@@ -141,7 +132,7 @@ function Login() {
 
           <div className="login-form-links">
             <a href="reset-password" className="login-link">
-              Forgot your password?
+              비밀번호를 까먹었나요?
             </a>
           </div>
 
@@ -150,9 +141,8 @@ function Login() {
           </button>
 
           <div className="login-form-bottom">
-            <span>or</span>
             <button type="button" className="login-link" onClick={() => setShowSignUp(true)}>
-              Create new account
+              회원가입
             </button>
           </div>
         </form>

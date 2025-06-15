@@ -299,7 +299,6 @@ function SidebarUI() {
 							className="sidebar-button"
 							onClick={() => navigate('/applicationManagement')}
 						>
-							<span className="button-icon">📋</span>
 							신청 목록
 						</button>
 					</div>
