@@ -1,142 +1,244 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import freeIconOpenMenu103370951 from "../assets/free-icon-open-menu-1.png";
-import polygon1 from "../assets/Polygon-1.svg";
 import "./SidebarUI.css";
+import { BiUser } from "react-icons/bi";
+import { BiCheckSquare } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
+import { BiDownload } from "react-icons/bi";
+import { FiLogIn } from "react-icons/fi";
+import { LuLogOut } from "react-icons/lu";
 
-function SidebarUI({ isOpen, onToggle }) {
+function SidebarUI() {
 	const navigate = useNavigate();
-	const [spaceType, setSpaceType] = useState(null);
-	const [chairType, setChairType] = useState(null);
-	const [shadeType, setShadeType] = useState(null);
-	const [showCategory, setShowCategory] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [user, setUser] = useState(null);
+	const [showCategoryBar, setShowCategoryBar] = useState(false);
+	
+	// 카테고리 필터 상태
+	const [filters, setFilters] = useState({
+		spaceType: null, // 'indoor' | 'outdoor' | null
+		hasChair: null,  // true | false | null
+		hasShade: null   // true | false | null
+	});
 
-	const menuButtons = [
-		{ label: '흡연구역 신청하기', onClick: () => console.log('흡연구역 신청하기 클릭') },
-		{ label: '이미지 저장', onClick: () => console.log('이미지 저장 클릭') },
-		{ label: '로그인하기', onClick: () => navigate('/signin') },
+	// 로그인 상태 확인
+	useEffect(() => {
+		const token = localStorage.getItem('access_token');
+		if (token) {
+			const userEmail = localStorage.getItem('userEmail');
+			if (userEmail) {
+				setUser({ email: userEmail });
+			} else {
+				setUser(null);
+			}
+		} else {
+			setUser(null);
+		}
+	}, []);
+	const handleLogout = () => {
+		localStorage.removeItem('access_token');
+		localStorage.removeItem('userEmail');
+		setUser(null);
+		navigate('/signin');
+	};
+
+	const handleCategoryClick = () => {
+		setShowCategoryBar(!showCategoryBar);
+	};
+
+	const handleFilterChange = (filterType, value) => {
+		setFilters(prev => ({
+			...prev,
+			[filterType]: prev[filterType] === value ? null : value
+		}));
+	};
+
+	const handleApplyFilters = () => {
+		console.log('적용된 필터:', filters);
+		// 여기서 나중에 DB 쿼리나 API 호출을 할 예정
+		// 예: await fetchFilteredSmokingAreas(filters);
+		alert(`필터 적용됨:\n실내/외부: ${filters.spaceType || '전체'}\n의자: ${filters.hasChair === null ? '전체' : filters.hasChair ? '있음' : '없음'}\n차양막: ${filters.hasShade === null ? '전체' : filters.hasShade ? '있음' : '없음'}`);
+		
+		// 적용 후 사이드바와 카테고리 바 모두 닫기
+		setShowCategoryBar(false);
+		setIsExpanded(false);
+	};
+
+	const handleResetFilters = () => {
+		setFilters({
+			spaceType: null,
+			hasChair: null,
+			hasShade: null
+		});
+	};
+
+	const handleRegisterClick = () => {
+		const token = localStorage.getItem('access_token');
+		if (!token) {
+			alert('로그인 후 이용 가능한 기능입니다.');
+			navigate('/signin');
+			return;
+		}
+		navigate('/Application');
+	};
+
+	const menuItems = [
+		{ 
+			id: 'category',
+			label: '흡연구역 카테고리 선택',
+			onClick: handleCategoryClick,
+			icon: <BiCheckSquare />
+		},
+		{ 
+			id: 'register',
+			label: '흡연구역 신청',
+			onClick: handleRegisterClick,
+			icon: <BiEdit />
+		}
 	];
+
+	const handleProfileClick = () => {
+		if (user) {
+			navigate('/mypage');
+		} else {
+			navigate('/signin');
+		}
+	};
+
+	const handleLoginClick = () => {
+		navigate('/signin');
+	};
 
 	return (
 		<>
-			<aside className={`sidebar${!isOpen ? ' closed' : ''}`}>
-				<div className="frame">
-					<div className="div">
-						<div className="filter">
-							<div className="free-icon-open-menu-wrapper">
-								<img
-									className="free-icon-open-menu"
-									alt="Free icon open menu"
-									src={freeIconOpenMenu103370951}
-								/>
+			<div 
+				className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}
+				onMouseEnter={() => setIsExpanded(true)}
+				onMouseLeave={() => {
+					// 카테고리 바가 열려있으면 사이드바를 닫지 않음
+					if (!showCategoryBar) {
+						setIsExpanded(false);
+					}
+				}}
+			>
+				<div className="sidebar-content">
+					{/* 프로필 섹션 */}
+					<div className="profile-section" onClick={handleProfileClick}>
+						<div className="profile-icon">
+							<BiUser />
+						</div>
+						<div className="profile-text">
+							{user ? user.email : '로그인 필요'}
+						</div>
+					</div>
+
+					{/* 메뉴 아이템들 */}
+					{menuItems.map((item) => (
+						<div 
+							key={item.id}
+							className={`menu-item ${item.id === 'category' && showCategoryBar ? 'active' : ''}`}
+							onClick={item.onClick}
+						>
+							<div className="menu-icon">
+								{item.icon}
 							</div>
-							<div className="div-2">
-								<div className="div-3">
-									<button
-										type="button"
-										className={`category-toggle-btn${showCategory ? ' active' : ''}`}
-										onClick={() => setShowCategory(v => !v)}
-									>
-										흡연구역 카테고리 선택
-									</button>
-									<div className={`category-slide${showCategory ? ' open' : ''}`}> 
-										<div className="div-4">
-											<div className="div-10">
-												<div className="text-wrapper-2">공간 유형</div>
-												<div className="div-6">
-													<button
-														type="button"
-														className={`category-choice-btn${spaceType === 'indoor' ? ' selected' : ''}`}
-														onClick={() => setSpaceType(spaceType === 'indoor' ? null : 'indoor')}
-													>
-														실내
-													</button>
-													<button
-														type="button"
-														className={`category-choice-btn${spaceType === 'outdoor' ? ' selected' : ''}`}
-														onClick={() => setSpaceType(spaceType === 'outdoor' ? null : 'outdoor')}
-													>
-														외부
-													</button>
-												</div>
-											</div>
-											<div className="div-10">
-												<div className="text-wrapper-2">의자 유무</div>
-												<div className="div-6">
-													<button
-														type="button"
-														className={`category-choice-btn${chairType === 'yes' ? ' selected' : ''}`}
-														onClick={() => setChairType(chairType === 'yes' ? null : 'yes')}
-													>
-														있음
-													</button>
-													<button
-														type="button"
-														className={`category-choice-btn${chairType === 'no' ? ' selected' : ''}`}
-														onClick={() => setChairType(chairType === 'no' ? null : 'no')}
-													>
-														없음
-													</button>
-												</div>
-											</div>
-											<div className="div-12">
-												<div className="text-wrapper-4">차양막 유무</div>
-												<div className="div-6">
-													<button
-														type="button"
-														className={`category-choice-btn${shadeType === 'yes' ? ' selected' : ''}`}
-														onClick={() => setShadeType(shadeType === 'yes' ? null : 'yes')}
-													>
-														있음
-													</button>
-													<button
-														type="button"
-														className={`category-choice-btn${shadeType === 'no' ? ' selected' : ''}`}
-														onClick={() => setShadeType(shadeType === 'no' ? null : 'no')}
-													>
-														없음
-													</button>
-												</div>
-											</div>
-											<button
-												type="button"
-												className="div-wrapper-2"
-												onClick={() => {
-													console.log("필터 적용:", { spaceType, chairType, shadeType });
-												}}
-											>
-												<div className="text-wrapper">적용</div>
-											</button>
-										</div>
-									</div>
-								</div>
-								{menuButtons.map((btn, idx) => (
-									<button
-										key={btn.label}
-										className="sidebar-menu-btn"
-										onClick={btn.onClick}
-									>
-										{btn.label}
-									</button>
-								))}
+							<div className="menu-text">
+								{item.label}
 							</div>
+						</div>
+					))}
+
+					{/* 로그인/로그아웃 버튼 */}
+					{user 
+						? <div className="menu-item" onClick={handleLogout}>
+							<div className="menu-icon"><LuLogOut /></div>
+							<div className="menu-text">로그아웃</div>
+						</div>
+						: <div className="menu-item" onClick={handleLoginClick}>
+							<div className="menu-icon"><FiLogIn /></div>
+							<div className="menu-text">로그인</div>
+						</div>
+					}
+				</div>
+			</div>
+
+			{/* 카테고리 선택 바 */}
+			{showCategoryBar && (
+				<div className="category-bar">
+					<div className="category-header">
+						<h3>카테고리 선택</h3>
+					</div>
+					
+					<div className="category-content">
+						{/* 실내/외부 선택 */}
+						<div className="filter-group">
+							<label>공간 유형</label>
+							<div className="filter-options">
+								<button 
+									className={`filter-btn ${filters.spaceType === 'indoor' ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('spaceType', 'indoor')}
+								>
+									실내
+								</button>
+								<button 
+									className={`filter-btn ${filters.spaceType === 'outdoor' ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('spaceType', 'outdoor')}
+								>
+									외부
+								</button>
+							</div>
+						</div>
+
+						{/* 의자 유무 */}
+						<div className="filter-group">
+							<label>의자 유무</label>
+							<div className="filter-options">
+								<button 
+									className={`filter-btn ${filters.hasChair === true ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('hasChair', true)}
+								>
+									있음
+								</button>
+								<button 
+									className={`filter-btn ${filters.hasChair === false ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('hasChair', false)}
+								>
+									없음
+								</button>
+							</div>
+						</div>
+
+						{/* 차양막 유무 */}
+						<div className="filter-group">
+							<label>차양막 유무</label>
+							<div className="filter-options">
+								<button 
+									className={`filter-btn ${filters.hasShade === true ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('hasShade', true)}
+								>
+									있음
+								</button>
+								<button 
+									className={`filter-btn ${filters.hasShade === false ? 'selected' : ''}`}
+									onClick={() => handleFilterChange('hasShade', false)}
+								>
+									없음
+								</button>
+							</div>
+						</div>
+
+						{/* 버튼들 */}
+						<div className="filter-actions">
+							<button className="reset-btn" onClick={handleResetFilters}>
+								초기화
+							</button>
+							<button className="apply-btn" onClick={handleApplyFilters}>
+								적용
+							</button>
 						</div>
 					</div>
 				</div>
-			</aside>
-			<div
-				className={`polygon-wrapper${!isOpen ? ' closed' : ''}`}
-				onClick={onToggle}
-				style={{
-					left: !isOpen ? 0 : 300,
-					position: 'fixed',
-					top: '50%',
-					transform: 'translateY(-50%)',
-					zIndex: 3000,
-				}}
-			>
-				<img className="polygon" alt="Toggle sidebar" src={polygon1} />
-			</div>
+			)}
 		</>
 	);
 }

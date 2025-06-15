@@ -1,10 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import x651 from '../assets/65-1.png';
 import NLoca from '../assets/NowLocation.png';
-import './GoogleMap.css'; // 기존 스타일 재사용
+import './GoogleMap.css';
+import { createRoot } from 'react-dom/client';
 
-// API 키를 직접 설정 (임시 해결책)
 const GOOGLE_MAP_API_KEY = 'AIzaSyATsGagEoK00aTqhbJuVKpGGKjNJdSM06Q';
+
+function getMarkerColor({ space_type, has_chair, has_shade }) {
+	if (space_type && has_chair && has_shade) return 'blue';
+	if (space_type && has_chair && !has_shade) return 'yellow';
+	if (space_type && !has_chair && has_shade) return 'green';
+	if (space_type && !has_chair && !has_shade) return 'red';
+	if (!space_type && !has_chair && !has_shade) return 'purple';
+	if (!space_type && !has_chair && has_shade) return 'orange';
+	if (!space_type && has_chair && !has_shade) return 'pink';
+	if (!space_type && has_chair && has_shade) return 'brown';
+	return 'gray';
+}
 
 function loadGoogleMapsScript(callback) {
 	if (window.google && window.google.maps) {
@@ -38,6 +50,19 @@ function loadGoogleMapsScript(callback) {
 
 const DEFAULT_CENTER = { lat: 36.6283, lng: 127.457 };
 
+const InfoWindowContent = ({ name, inside, has_chair, has_shade, onNavigate, onClose }) => (
+	<div className="info-window-content">
+		<div className="place-title">{name}</div>
+		<div className="place-type">
+			{inside ? '실내' : '실외'} / {has_chair ? '의자 있음' : '의자 없음'} / {has_shade ? '차양막 있음' : '차양막 없음'}
+		</div>
+		<div className="button-row">
+			<button className="navigate-btn" onClick={onNavigate}>길찾기</button>
+			<button className="cancel-btn" onClick={onClose}>취소</button>
+		</div>
+	</div>
+);
+
 const GoogleMap = () => {
 	const mapRef = useRef(null);
 	const mapInstance = useRef(null);
@@ -46,7 +71,9 @@ const GoogleMap = () => {
 	const [mapLoaded, setMapLoaded] = useState(false);
 	const [error, setError] = useState(null);
 
-	// 현재 위치 pulse overlay 관리
+	const [smokingZones, setSmokingZones] = useState([]); 
+	const [zoneMarkers, setZoneMarkers] = useState([]);
+
 	const [pulsePos, setPulsePos] = useState(null);
 
 	useEffect(() => {
@@ -55,7 +82,7 @@ const GoogleMap = () => {
 			return;
 		}
 
-		console.log('API Key:', GOOGLE_MAP_API_KEY); // API 키 확인용 로그
+		console.log('API Key:', GOOGLE_MAP_API_KEY); 
 
 		loadGoogleMapsScript(() => {
 			if (!mapRef.current) {
@@ -64,8 +91,8 @@ const GoogleMap = () => {
 			}
 			try {
 				console.log('지도 초기화 시도...');
-			mapInstance.current = new window.google.maps.Map(mapRef.current, {
-				center: DEFAULT_CENTER,
+				mapInstance.current = new window.google.maps.Map(mapRef.current, {
+					center: DEFAULT_CENTER,
 					zoom: 18,
 					mapTypeControl: true,
 					streetViewControl: true,
@@ -75,31 +102,90 @@ const GoogleMap = () => {
 
 				console.log('지도 초기화 성공');
 
-			// 기본 마커 (AdvancedMarkerElement 사용)
-			if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
-				markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
-					map: mapInstance.current,
-					position: DEFAULT_CENTER,
-				});
-			} else {
-				// fallback: 기존 Marker (구버전 브라우저 호환)
-				markerRef.current = new window.google.maps.Marker({
-					position: DEFAULT_CENTER,
-					map: mapInstance.current,
-				});
-			}
-			setMapLoaded(true);
+				if (window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement) {
+					markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
+						map: mapInstance.current,
+						position: DEFAULT_CENTER,
+					});
+				} else {
+					markerRef.current = new window.google.maps.Marker({
+						position: DEFAULT_CENTER,
+						map: mapInstance.current,
+					});
+				}
+				setMapLoaded(true);
 			} catch (err) {
 				console.error('지도 초기화 실패:', err);
 				setError('지도를 초기화하는데 실패했습니다.');
 			}
 		});
 
-		// cleanup
 		return () => {
 			window.initMap = undefined;
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!mapLoaded || !mapInstance.current) return;
+		const fetchAndRender = () => {
+			const bounds = mapInstance.current.getBounds();
+			if (!bounds) return;
+			fetch(`http://localhost:8000/map/pins`)
+				.then((res) => res.json())
+				.then((data) => {
+					setSmokingZones(data); 
+				});
+		};
+		fetchAndRender();
+		const listener = mapInstance.current.addListener('idle', fetchAndRender);
+		return () => window.google.maps.event.removeListener(listener);
+	}, [mapLoaded]);
+
+	useEffect(() => {
+		if (!mapInstance.current) return;
+		zoneMarkers.forEach((m) => m.setMap(null));
+		const newMarkers = smokingZones.map((zone) => {
+			const color = getMarkerColor(zone);
+			const marker = new window.google.maps.Marker({
+				position: { lat: zone.latitude, lng: zone.longitude },
+				map: mapInstance.current,
+				icon: {
+					path: window.google.maps.SymbolPath.CIRCLE,
+					scale: 10,
+					fillColor: color,
+					fillOpacity: 1,
+					strokeWeight: 1,
+					strokeColor: '#333',
+				},
+			});
+			const infoWindow = new window.google.maps.InfoWindow({
+				content: document.createElement('div'),
+				maxWidth: 320,
+			});
+			const infoContent = document.createElement('div');
+			infoWindow.setContent(infoContent);
+			const handleNavigate = () => {
+				window.open(`https://map.naver.com/v5/directions/-/-/-/walk?c=15.00,0,0,0,dh`, '_blank');
+			};
+			const handleClose = () => infoWindow.close();
+			const root = createRoot(infoContent);
+			root.render(
+				<InfoWindowContent
+					name={zone.name || '장소명'}
+					inside={zone.inside}
+					has_chair={zone.chair}
+					has_shade={zone.shade}
+					onNavigate={handleNavigate}
+					onClose={handleClose}
+				/>
+			);
+			marker.addListener('click', () => {
+				infoWindow.open({ anchor: marker, map: mapInstance.current });
+			});
+			return marker;
+		});
+		setZoneMarkers(newMarkers);
+	}, [smokingZones]);
 
 	const handleCurrentLocation = () => {
 		if (!window.google || !window.google.maps || !mapInstance.current) {

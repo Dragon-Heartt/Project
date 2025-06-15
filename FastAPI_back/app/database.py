@@ -1,30 +1,34 @@
-from dotenv import load_dotenv
+# app/database.py
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 load_dotenv()
 
-MYSQL_HOST = os.getenv("MYSQL_HOST")
-MYSQL_PORT = os.getenv("MYSQL_PORT")
-MYSQL_USER = os.getenv("MYSQL_USER")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-MYSQL_DB = os.getenv("MYSQL_DB")
-
-# SQLAlchemy 연결 문자열 생성
-SQLALCHEMY_DATABASE_URL = (
-    f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}"
+# .env 에 DATABASE_URL="mysql+pymysql://dhuser:dhpasswd@localhost:3306/SmokeMapDB" 같이 정의되어 있어야 합니다.
+SQLALCHEMY_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "mysql+pymysql://dhuser:dhpasswd@localhost:3306/SmokeMapDB"
 )
 
-# SQLAlchemy 세팅
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    pool_pre_ping=True
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
 Base = declarative_base()
 
-# 의존성 주입용 함수
 def get_db():
-    db = SessionLocal()
+    """FastAPI Depends 에 넣어 쓰는 DB 세션 생성기"""
+    db: Session = SessionLocal()
     try:
         yield db
     finally:
