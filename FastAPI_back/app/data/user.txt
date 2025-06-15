@@ -1,0 +1,3 @@
+admin@test.com,$2b$12$37uLt3NfMtjig6l616eb6uEglOWBKCG7aI2lavuwliB17OTSzuP3m,2025-06-15T11:19:40.659760,true
+test@test.com,$2b$12$B4RW5xgC.aKGHdPmwllg.ulqSVVqoSTYrIssJ7Tl3sdbuE45ohKJK,2025-06-14T19:48:44.521139,false
+test1@test.com,$2b$12$i7q5rDFyqhVuQEiA4uUeyeneTxYxi.WucffJZZQQubEn2N43kPDsu,2025-06-15T13:06:00.102093,false

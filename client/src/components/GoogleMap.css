@@ -89,15 +89,6 @@
   z-index: 1000;
 }
 
-.gm-style .gm-style-iw-c {
-  padding: 0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
-  max-width: 380px !important;
-  min-width: 220px !important;
-  background: #fff !important;
-}
-
 .info-window-content {
   display: flex;
   flex-direction: column;
@@ -108,6 +99,20 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.13);
   min-width: 220px;
   max-width: 320px;
+}
+
+.place-image {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .info-window-content .place-title {
@@ -159,21 +164,7 @@
   position: relative;
 }
 
-.info-window-content .navigate-btn:hover {
-  background: linear-gradient(90deg, #1ec800 0%, #00c73c 100%);
-}
 
-.info-window-content .navigate-btn::before {
-  content: "";
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  margin-right: 4px;
-  background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="%2300C73C"/><path d="M10 5v7.5M10 12.5l3-3M10 12.5l-3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  background-size: contain;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-}
 
 .info-window-content .cancel-btn {
   background: #f1f3f4;
@@ -188,19 +179,43 @@
 }
 
 .gm-ui-hover-effect {
-  top: 8px !important;
-  right: 8px !important;
-  width: 24px !important;
-  height: 24px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: rgba(255,255,255,0.8) !important;
-  border-radius: 50% !important;
+  display: none !important;
 }
 
-.gm-ui-hover-effect img {
-  width: 14px !important;
-  height: 14px !important;
-  margin: 5px !important;
+.marker-legend {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  max-width: 280px;
 }
+
+.marker-legend h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-item span {
+  font-size: 14px;
+  color: #666;
+}
+
 

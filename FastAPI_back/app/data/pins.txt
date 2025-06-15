@@ -1,0 +1,1 @@
+{"title": "농대 구석", "latitude": 36.62937325842162, "longitude": 127.45229257381936, "space_type": false, "has_chair": false, "has_shade": true, "description": "", "photo_url": "app/data/uploads/20250615143308_스크린샷 2025-06-15 오후 8.08.27.png", "created_at": "2025-06-15T14:33:08.682798", "approved": true}

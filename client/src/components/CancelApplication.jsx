@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import './CancelApplication.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-function CancelApplication({ lat, lng, zoneName, onSubmit, onCancel }) {
+function CancelApplication(props) {
   const navigate = useNavigate();
+  const location = useLocation();
+  // state에서 우선 받고, 없으면 props fallback
+  const lat = location.state?.lat ?? props.lat;
+  const lng = location.state?.lng ?? props.lng;
+  const zoneName = location.state?.zoneName ?? props.zoneName;
+  const onSubmit = props.onSubmit;
+  const onCancel = props.onCancel;
+
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,16 +37,24 @@ function CancelApplication({ lat, lng, zoneName, onSubmit, onCancel }) {
     }
     setLoading(true);
     setError('');
-    // 실제 전송 로직 (예: API 호출)
     try {
       const formData = new FormData();
-      formData.append('lat', lat);
-      formData.append('lng', lng);
+      formData.append('latitude', String(lat));
+      formData.append('longitude', String(lng));
       formData.append('photo', photo);
-      formData.append('zoneName', zoneName);
-      // 예시: await fetch('/api/cancel-request', { method: 'POST', body: formData });
-      if (onSubmit) onSubmit(formData);
-      alert('취소 신청이 완료되었습니다!');
+      formData.append('title', zoneName);
+      const res = await fetch('http://localhost:8000/pinCancel/pins/cancel', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        if (onSubmit) onSubmit(formData);
+        alert('취소 신청이 완료되었습니다!');
+        navigate('/main');
+      } else {
+        const errText = await res.text();
+        setError(`신청 실패: ${res.status} - ${errText}`);
+      }
     } catch (err) {
       setError('신청 중 오류가 발생했습니다.');
     } finally {

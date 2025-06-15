@@ -8,6 +8,7 @@ import SignUp from "./components/SignUp";
 import MyPage from "./components/MyPage";
 import Application from "./components/Application";
 import CancelApplication from "./components/CancelApplication";
+import ApplicationManagement from "./components/ApplicationManagement";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/Application" element={<Application />} />
           <Route path="/CancelApplication" element={<CancelApplication />} />
+          <Route path="/applicationManagement" element={<ApplicationManagement />} />
           <Route
             path="/main"
             element={
