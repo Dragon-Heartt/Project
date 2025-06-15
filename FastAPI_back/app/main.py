@@ -14,6 +14,7 @@ app = FastAPI(title="Dragon-Heart FastAPI Backend")
 
 from fastapi.staticfiles import StaticFiles
 app.mount("/uploads", StaticFiles(directory="app/data/uploads"), name="uploads")
+app.mount("/cancel_uploads", StaticFiles(directory="app/data/cancel_uploads"), name="cancel_uploads")
 
 app.add_middleware(
     CORSMiddleware,

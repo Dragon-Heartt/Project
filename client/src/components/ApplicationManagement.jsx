@@ -16,7 +16,6 @@ const ApplicationManagement = () => {
         fetchCancelApplications();
     }, []);
 
-    // 신청 목록: txt 기반 승인대기 목록과 일치시키기 위해 /map/pins/pending 사용
     const fetchApplications = async () => {
         setLoading(true);
         setApplyError(null);
@@ -79,54 +78,40 @@ const ApplicationManagement = () => {
         }
     };
 
+    // 신청 반려
+    const handleReject = async (index) => {
+        try {
+            const response = await fetch(`http://localhost:8000/admin/reject/${index}`, { method: 'PUT' });
+            if (!response.ok) throw new Error('반려에 실패했습니다.');
+            fetchApplications();
+        } catch (e) {
+            alert(e.message);
+        }
+    };
+
     return (
         <div className="application-management">
-            {/* 홈(메인)으로 돌아가기 버튼 */}
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+            <div className="application-header">
                 <button
                     onClick={() => navigate('/main')}
-                    style={{
-                        marginRight: 16,
-                        background: 'none',
-                        border: 'none',
-                        fontSize: 20,
-                        cursor: 'pointer',
-                        color: '#1976d2',
-                        fontWeight: 'bold',
-                        padding: 0
-                    }}
+                    className="back-button"
                     aria-label="메인으로 돌아가기"
                 >
-                    ⬅ 홈
+                    ← 지도로 돌아가기
                 </button>
                 <div style={{ flex: 1 }} />
             </div>
 
-            {/* 상단 탭 */}
-            <div style={{ display: 'flex', borderBottom: '1px solid #ccc', marginBottom: 20 }}>
+            <div className="tab-container">
                 <button
                     onClick={() => setTab('apply')}
-                    style={{
-                        fontWeight: tab === 'apply' ? 'bold' : 'normal',
-                        border: 'none',
-                        background: 'none',
-                        padding: '10px 20px',
-                        borderBottom: tab === 'apply' ? '2px solid #1976d2' : 'none',
-                        cursor: 'pointer'
-                    }}
+                    className={`tab-button ${tab === 'apply' ? 'active' : ''}`}
                 >
                     신청 목록
                 </button>
                 <button
                     onClick={() => setTab('cancel')}
-                    style={{
-                        fontWeight: tab === 'cancel' ? 'bold' : 'normal',
-                        border: 'none',
-                        background: 'none',
-                        padding: '10px 20px',
-                        borderBottom: tab === 'cancel' ? '2px solid #1976d2' : 'none',
-                        cursor: 'pointer'
-                    }}
+                    className={`tab-button ${tab === 'cancel' ? 'active' : ''}`}
                 >
                     취소 신청 목록
                 </button>
@@ -138,17 +123,25 @@ const ApplicationManagement = () => {
                     {loading ? (
                         <div>로딩 중...</div>
                     ) : applyError ? (
-                        <div style={{ color: 'red' }}>{applyError}</div>
+                        <div className="error-message">{applyError}</div>
                     ) : applications.length === 0 ? (
                         <div>신청 내역이 없습니다.</div>
                     ) : (
-                        applications.map((app) => (
-                            <div key={app.fileIndex} className="application-card">
+                        applications.map((app, idx) => (
+                            <div key={idx} className="application-card">
+                                {app.photo_url && (
+                                    <div className="application-image-wrap">
+                                        <img src={`http://localhost:8000${app.photo_url}`} alt={app.title} className="application-image" />
+                                    </div>
+                                )}
                                 <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
                                 <div>상태: {app.approved ? '승인됨' : '대기중'}</div>
                                 {!app.approved && (
-                                    <button onClick={() => handleApprove(app.fileIndex)}>수락</button>
+                                    <div className="button-group">
+                                        <button className="approve-button" onClick={() => handleApprove(idx)}>수락</button>
+                                        <button className="reject-button" onClick={() => handleReject(idx)}>반려</button>
+                                    </div>
                                 )}
                             </div>
                         ))
@@ -160,16 +153,23 @@ const ApplicationManagement = () => {
             {tab === 'cancel' && (
                 <div>
                     {cancelError ? (
-                        <div style={{ color: 'red' }}>{cancelError}</div>
+                        <div className="error-message">{cancelError}</div>
                     ) : cancelApplications.length === 0 ? (
                         <div>취소 신청 내역이 없습니다.</div>
                     ) : (
                         cancelApplications.map((app, idx) => (
                             <div key={idx} className="application-card">
+                                {app.photo_url && (
+                                    <div className="application-image-wrap">
+                                        <img src={`http://localhost:8000${app.photo_url}`} alt={app.title} className="application-image" />
+                                    </div>
+                                )}
                                 <div>제목: {app.title || '-'}</div>
                                 <div>위치: {app.latitude}, {app.longitude}</div>
-                                <button onClick={() => handleCancelApprove(idx)}>취소 승인</button>
-                                <button onClick={() => handleCancelReject(idx)}>취소 거절</button>
+                                <div className="button-group">
+                                    <button className="approve-button" onClick={() => handleApprove(idx)}>수락</button>
+                                    <button className="reject-button" onClick={() => handleReject(idx)}>반려</button>
+                                </div>
                             </div>
                         ))
                     )}

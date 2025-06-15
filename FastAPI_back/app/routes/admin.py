@@ -30,11 +30,21 @@ def approve_pin(index: int):
     return {"success": True, "message": "승인되었습니다."}
 @router.get("/cancel-requests")
 def get_cancel_requests():
-    cancel_file = "app/data/cancelPins.txt"
+    cancel_file = os.path.join("app", "data", "cancelPins.txt")
     if not os.path.exists(cancel_file):
         return []
+    results = []
     with open(cancel_file, "r", encoding="utf-8") as f:
-        return [json.loads(line.strip()) for line in f if line.strip()]
+        for line in f:
+            if not line.strip():
+                continue
+            item = json.loads(line.strip())
+            # extract filename from filesystem path
+            filename = os.path.basename(item.get("photo_url", "")) or item.get("filename", "")
+            # rewrite to public URL under the static mount
+            item["photo_url"] = f"/cancel_uploads/{filename}"
+            results.append(item)
+    return results
 
 @router.put("/cancel-approve/{index}")
 def approve_cancel(index: int):
@@ -53,7 +63,6 @@ def approve_cancel(index: int):
     with open(cancel_file, "w", encoding="utf-8") as f:
         f.writelines(cancel_lines)
 
-    # pins.txt에서 해당 pin 제거
     with open(pins_file, "r", encoding="utf-8") as f:
         pin_lines = f.readlines()
 
