@@ -153,11 +153,10 @@
   font-weight: 600;
 }
 
-/* 카테고리 선택 바 스타일 */
 .category-bar {
   position: fixed;
   top: 90px;
-  left: 300px; /* 사이드바 확장 너비만큼 */
+  left: 300px; 
   width: 270px;
   height: 32.3vh;
   background: #FFF;
