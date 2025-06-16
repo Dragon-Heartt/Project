@@ -137,7 +137,6 @@ function Application({ onClose }) {
     );
   };
 
-  // 사진 업로드
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     setPhoto(file);
@@ -150,7 +149,6 @@ function Application({ onClose }) {
     }
   };
 
-  // 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -182,7 +180,6 @@ function Application({ onClose }) {
     }
   };
 
-  // 단계별 렌더링
   const renderStep = () => {
     if (step === 0) {
       return (
@@ -287,7 +284,6 @@ function Application({ onClose }) {
       <div className="application-modal">
         <button className="application-close-btn" onClick={() => navigate('/main')}>&times;</button>
         <form className="application-form" onSubmit={handleSubmit} autoComplete="off">
-          {/* h2는 항상 상단에 고정 */}
           <h2 className="application-title">
             {step === 0 && '위치 선택'}
             {step === 1 && '사진 등록'}
@@ -297,7 +293,6 @@ function Application({ onClose }) {
           {renderStep()}
           {error && <div className="application-msg error">{error}</div>}
         </form>
-        {/* 지도 모달 */}
         {showMapModal && (
           <div className="application-map-modal-backdrop">
             <div className="application-map-modal">

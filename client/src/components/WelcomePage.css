@@ -1,10 +1,8 @@
-/* Highlighted font for welcome headline */
 .highlight-font {
     font-family: 'Pretendard', 'Arial', sans-serif;
     font-size: 30px;
     font-weight: 800;
     color: #1a237e;
-    /* Add more styles as needed */
 }
 
 .welcome-page {

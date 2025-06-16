@@ -67,7 +67,6 @@
   transition-delay: 0.05s;
 }
 
-/* 메뉴 아이템 */
 .menu-item {
   display: flex;
   align-items: center;

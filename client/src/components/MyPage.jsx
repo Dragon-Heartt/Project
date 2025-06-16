@@ -7,7 +7,6 @@ const MyPage = () => {
     const userEmail = localStorage.getItem('userEmail');
 
     const handleLogout = () => {
-        // 토큰과 사용자 정보 삭제
         Cookies.remove('access_token');
         localStorage.removeItem('userEmail');
         

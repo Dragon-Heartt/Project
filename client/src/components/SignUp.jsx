@@ -5,7 +5,7 @@ import letSignUp from '../assets/SignUp4.png';
 
 function SignUp({ onClose }) {
   const [email, setEmail] = useState('');
-  const [emailValid, setEmailValid] = useState(null); // null: 미확인, true: 사용가능, false: 중복
+  const [emailValid, setEmailValid] = useState(null); 
   const [emailCheckMsg, setEmailCheckMsg] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -14,7 +14,6 @@ function SignUp({ onClose }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // 이메일 중복 검사
   const checkEmail = async () => {
     if (!email) return;
     setEmailValid(null);
@@ -38,13 +37,11 @@ function SignUp({ onClose }) {
     }
   };
 
-  // 비밀번호 일치 검사
   const handlePw2Change = (v) => {
     setPassword2(v);
     setPwMatch(password === v);
   };
 
-  // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -85,7 +82,6 @@ function SignUp({ onClose }) {
       <div className="signup-modal">
         <button className="signup-close-btn" onClick={onClose}>&times;</button>
         <div className="signup-modal-content">
-          {/* 왼쪽: 입력 폼 */}
           <form className="signup-form" onSubmit={handleSubmit} autoComplete="off">
             <p className="signup-form-title">회원가입</p>
             <div className="signup-input-group">

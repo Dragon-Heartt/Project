@@ -2,7 +2,6 @@ import React from "react";
 import x651 from "../assets/65-1.png";
 import "./CurrentPlace.css";
 
-// onClick 핸들러를 props로 받도록 변경
 function CurrentPlace({ onClick }) {
   return (
     <button

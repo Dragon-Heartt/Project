@@ -4,7 +4,7 @@ import './ApplicationManagement.css';
 
 const ApplicationManagement = () => {
     const navigate = useNavigate();
-    const [tab, setTab] = useState('apply'); // 'apply' or 'cancel'
+    const [tab, setTab] = useState('apply');
     const [applications, setApplications] = useState([]);
     const [cancelApplications, setCancelApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -44,7 +44,6 @@ const ApplicationManagement = () => {
         }
     };
 
-    // 신청 승인
     const handleApprove = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/approve/${index}`, { method: 'PUT' });
@@ -55,19 +54,17 @@ const ApplicationManagement = () => {
         }
     };
 
-    // 취소 승인
     const handleCancelApprove = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/cancel-approve/${index}`, { method: 'PUT' });
             if (!response.ok) throw new Error('취소 수락에 실패했습니다.');
             fetchCancelApplications();
-            fetchApplications(); // 핀 목록도 갱신
+            fetchApplications(); 
         } catch (e) {
             alert(e.message);
         }
     };
 
-    // 취소 거절
     const handleCancelReject = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/cancel-reject/${index}`, { method: 'PUT' });
@@ -78,7 +75,6 @@ const ApplicationManagement = () => {
         }
     };
 
-    // 신청 반려
     const handleReject = async (index) => {
         try {
             const response = await fetch(`http://localhost:8000/admin/reject/${index}`, { method: 'PUT' });
@@ -146,7 +142,6 @@ const ApplicationManagement = () => {
                 </div>
             )}
 
-            {/* 취소 신청 목록 */}
             {tab === 'cancel' && (
                 <div>
                     {cancelError ? (

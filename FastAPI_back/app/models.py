@@ -1,5 +1,3 @@
-# app/models.py
-
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime, func
 from .database import Base
 
@@ -20,7 +18,7 @@ class MapPin(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     title = Column(String(100), nullable=False)
-    space_type = Column(Boolean, default=False)  # indoor, outdoor
+    space_type = Column(Boolean, default=False) 
     has_chair = Column(Boolean, default=False)
     has_shade = Column(Boolean, default=False)
     description = Column(String, nullable=True)

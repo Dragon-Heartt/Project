@@ -7,7 +7,6 @@ from jose import jwt, JWTError
 from dotenv import load_dotenv
 from fastapi.security import OAuth2PasswordBearer
 
-# 직접 import
 import sys
 sys.path.append('..')
 try:

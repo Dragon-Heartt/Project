@@ -1,4 +1,3 @@
-# app/database.py
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -7,7 +6,6 @@ from sqlalchemy.orm import sessionmaker, Session
 
 load_dotenv()
 
-# .env 에 DATABASE_URL="mysql+pymysql://dhuser:dhpasswd@localhost:3306/SmokeMapDB" 같이 정의되어 있어야 합니다.
 SQLALCHEMY_DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "mysql+pymysql://dhuser:dhpasswd@localhost:3306/SmokeMapDB"

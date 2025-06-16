@@ -7,7 +7,6 @@ import { BiEdit } from "react-icons/bi";
 import { BiDownload } from "react-icons/bi";
 import { FiLogIn } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
-import { IoInformationCircleOutline } from "react-icons/io5";
 
 function SidebarUI({ onFilterChange }) {
 	const navigate = useNavigate();
